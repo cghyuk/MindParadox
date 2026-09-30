@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d5f9c38e1a4f7b8c4d6e8f20315922, type: 3}
+  m_Name: PuzzleData_BirthdayParadox
+  m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.PuzzleData
+  puzzleId: birthday-paradox
+  categoryId: probability
+  title: Birthday Paradox
+  shortDescription: "23명만 모여도 같은 생일 확률이 50%를 넘는다?"
+  displayOrder: 1
+  sceneName: BirthdayParadox
+  puzzleType: 
+  isDefaultFree: 1
+  unlockOrder: 1
+  icon: {fileID: 0}
+  difficulty: 1
+  isEnabled: 1
+  titleKey: 
+  shortDescriptionKey: 

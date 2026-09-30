@@ -880,7 +880,10 @@ namespace MindParadox.EditorTools
             scroll.inertia = true;
             scroll.scrollSensitivity = 40f;
 
-            GameContentSetup.AttachMenu(safeArea, gameList, content, canvasObject, cardPrefab.GetComponent<GameCardUI>(), font);
+            GameCardUI montyCard = CreateCardInstance(cardPrefab, content, "MontyHallCard");
+            GameCardUI birthdayCard = CreateCardInstance(cardPrefab, content, "BirthdayCard");
+            ApplyCard(montyCard, "Monty Hall", "문을 바꾸면 정말 확률이 올라갈까?", "Open Monty Hall", "MontyHall");
+            ApplyCard(birthdayCard, "Birthday Paradox", "23명만 모여도 같은 생일 확률이 50%를 넘는다?", "Open Birthday Paradox", "BirthdayParadox");
 
             RectTransform footer = CreateUiObject("Footer", safeArea);
             var footerElement = footer.gameObject.AddComponent<LayoutElement>();
@@ -897,6 +900,14 @@ namespace MindParadox.EditorTools
             TMP_Text footerText = CreateText(footer, "FooterText", "More paradoxes coming soon", 34f, FontStyles.Normal, FooterColor, TextAlignmentOptions.Center, font, false);
             var footerTextElement = footerText.gameObject.AddComponent<LayoutElement>();
             footerTextElement.preferredHeight = 64f;
+
+            var menu = canvasObject.AddComponent<MainMenuManager>();
+            var menuObject = new SerializedObject(menu);
+            SerializedProperty entries = menuObject.FindProperty("entries");
+            entries.arraySize = 2;
+            WriteEntry(entries.GetArrayElementAtIndex(0), montyCard, "Monty Hall", "문을 바꾸면 정말 확률이 올라갈까?", "Open Monty Hall", "MontyHall");
+            WriteEntry(entries.GetArrayElementAtIndex(1), birthdayCard, "Birthday Paradox", "23명만 모여도 같은 생일 확률이 50%를 넘는다?", "Open Birthday Paradox", "BirthdayParadox");
+            menuObject.ApplyModifiedPropertiesWithoutUndo();
 
             CreateEventSystem();
             Stretch(canvasObject.GetComponent<RectTransform>());
@@ -931,6 +942,46 @@ namespace MindParadox.EditorTools
             var module = eventObject.AddComponent<InputSystemUIInputModule>();
             if (module.actionsAsset == null)
                 module.AssignDefaultActions();
+        }
+
+        static GameCardUI CreateCardInstance(GameObject prefab, Transform parent, string objectName)
+        {
+            var instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
+            instance.name = objectName;
+            return instance.GetComponent<GameCardUI>();
+        }
+
+        static void ApplyCard(GameCardUI card, string title, string description, string logMessage, string sceneName)
+        {
+            var serializedCard = new SerializedObject(card);
+            serializedCard.FindProperty("playLogMessage").stringValue = logMessage;
+            serializedCard.FindProperty("targetSceneName").stringValue = sceneName;
+            serializedCard.ApplyModifiedPropertiesWithoutUndo();
+
+            var titleText = serializedCard.FindProperty("titleText").objectReferenceValue as TMP_Text;
+            var descriptionText = serializedCard.FindProperty("descriptionText").objectReferenceValue as TMP_Text;
+            if (titleText != null)
+            {
+                titleText.text = title;
+                PrefabUtility.RecordPrefabInstancePropertyModifications(titleText);
+            }
+
+            if (descriptionText != null)
+            {
+                descriptionText.text = description;
+                PrefabUtility.RecordPrefabInstancePropertyModifications(descriptionText);
+            }
+
+            PrefabUtility.RecordPrefabInstancePropertyModifications(card);
+        }
+
+        static void WriteEntry(SerializedProperty entry, GameCardUI card, string title, string description, string logMessage, string sceneName)
+        {
+            entry.FindPropertyRelative("card").objectReferenceValue = card;
+            entry.FindPropertyRelative("title").stringValue = title;
+            entry.FindPropertyRelative("description").stringValue = description;
+            entry.FindPropertyRelative("playLogMessage").stringValue = logMessage;
+            entry.FindPropertyRelative("targetSceneName").stringValue = sceneName;
         }
 
         static TMP_Text CreateText(

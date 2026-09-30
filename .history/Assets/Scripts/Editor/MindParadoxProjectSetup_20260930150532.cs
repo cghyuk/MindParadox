@@ -663,7 +663,7 @@ namespace MindParadox.EditorTools
         {
             var root = new GameObject("GameCard", typeof(RectTransform));
             var rootRect = root.GetComponent<RectTransform>();
-            rootRect.sizeDelta = new Vector2(0f, 510f);
+            rootRect.sizeDelta = new Vector2(0f, 400f);
 
             var background = root.AddComponent<Image>();
             background.sprite = sprite;
@@ -672,8 +672,8 @@ namespace MindParadox.EditorTools
             background.raycastTarget = true;
 
             var layout = root.AddComponent<VerticalLayoutGroup>();
-            layout.padding = new RectOffset(40, 40, 32, 24);
-            layout.spacing = 0f;
+            layout.padding = new RectOffset(40, 40, 44, 40);
+            layout.spacing = 20f;
             layout.childAlignment = TextAnchor.UpperLeft;
             layout.childControlWidth = true;
             layout.childControlHeight = true;
@@ -681,26 +681,22 @@ namespace MindParadox.EditorTools
             layout.childForceExpandHeight = false;
 
             var element = root.AddComponent<LayoutElement>();
-            element.preferredHeight = 510f;
-            element.minHeight = 500f;
+            element.preferredHeight = 450f;
+            element.minHeight = 430f;
             element.flexibleWidth = 1f;
 
             var card = root.AddComponent<GameCardUI>();
 
             Image icon = CreateIcon(root.transform, sprite);
-            TMP_Text title = CreateText(root.transform, "TitleText", "Game Title", 54f, FontStyles.Bold, CardTitleColor, TextAlignmentOptions.TopLeft, font, false);
+            TMP_Text title = CreateText(root.transform, "TitleText", "Game Title", 44f, FontStyles.Bold, CardTitleColor, TextAlignmentOptions.TopLeft, font, false);
             var titleElement = title.gameObject.AddComponent<LayoutElement>();
-            titleElement.preferredHeight = 80f;
+            titleElement.preferredHeight = 64f;
             titleElement.flexibleHeight = 0f;
 
-            CreateGap(root.transform, "TitleDescriptionGap", 22f);
-
-            TMP_Text description = CreateText(root.transform, "DescriptionText", "Description", 42f, FontStyles.Normal, CardBodyColor, TextAlignmentOptions.TopLeft, font, true);
+            TMP_Text description = CreateText(root.transform, "DescriptionText", "Description", 34f, FontStyles.Normal, CardBodyColor, TextAlignmentOptions.TopLeft, font, true);
             var descriptionElement = description.gameObject.AddComponent<LayoutElement>();
-            descriptionElement.preferredHeight = 218f;
+            descriptionElement.preferredHeight = 150f;
             descriptionElement.flexibleHeight = 0f;
-
-            CreateGap(root.transform, "DescriptionButtonGap", 26f);
 
             Button button = CreatePlayButton(root.transform, font, sprite);
 
@@ -714,17 +710,6 @@ namespace MindParadox.EditorTools
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
             UnityEngine.Object.DestroyImmediate(root);
             return prefab;
-        }
-
-        static void CreateGap(Transform parent, string name, float height)
-        {
-            var gap = new GameObject(name, typeof(RectTransform));
-            gap.transform.SetParent(parent, false);
-            var element = gap.AddComponent<LayoutElement>();
-            element.minHeight = height;
-            element.preferredHeight = height;
-            element.flexibleHeight = 0f;
-            element.flexibleWidth = 1f;
         }
 
         static Image CreateIcon(Transform parent, Sprite sprite)
@@ -769,12 +754,12 @@ namespace MindParadox.EditorTools
             button.colors = colors;
 
             var element = buttonObject.AddComponent<LayoutElement>();
-            element.preferredHeight = 108f;
-            element.minHeight = 100f;
+            element.preferredHeight = 112f;
+            element.minHeight = 104f;
             element.flexibleHeight = 0f;
             element.flexibleWidth = 1f;
 
-            TMP_Text label = CreateText(buttonObject.transform, "Label", "PLAY", 42f, FontStyles.Bold, Color.white, TextAlignmentOptions.Center, font, false);
+            TMP_Text label = CreateText(buttonObject.transform, "Label", "PLAY", 34f, FontStyles.Bold, Color.white, TextAlignmentOptions.Center, font, false);
             Stretch(label.rectTransform);
             return button;
         }
@@ -819,24 +804,24 @@ namespace MindParadox.EditorTools
 
             RectTransform header = CreateUiObject("Header", safeArea);
             var headerElement = header.gameObject.AddComponent<LayoutElement>();
-            headerElement.preferredHeight = 344f;
+            headerElement.preferredHeight = 312f;
             headerElement.flexibleHeight = 0f;
             var headerLayout = header.gameObject.AddComponent<VerticalLayoutGroup>();
             headerLayout.padding = new RectOffset(64, 64, 72, 16);
-            headerLayout.spacing = 16f;
+            headerLayout.spacing = 12f;
             headerLayout.childAlignment = TextAnchor.UpperCenter;
             headerLayout.childControlWidth = true;
             headerLayout.childControlHeight = true;
             headerLayout.childForceExpandWidth = true;
             headerLayout.childForceExpandHeight = false;
 
-            TMP_Text headerTitle = CreateText(header, "TitleText", "Mind Paradox", 88f, FontStyles.Bold, TitleColor, TextAlignmentOptions.Center, font, false);
+            TMP_Text headerTitle = CreateText(header, "TitleText", "Mind Paradox", 72f, FontStyles.Bold, TitleColor, TextAlignmentOptions.Center, font, false);
             var headerTitleElement = headerTitle.gameObject.AddComponent<LayoutElement>();
-            headerTitleElement.preferredHeight = 116f;
+            headerTitleElement.preferredHeight = 100f;
 
-            TMP_Text subtitle = CreateText(header, "SubtitleText", "직관을 뒤집는 확률과 논리 퍼즐", 42f, FontStyles.Normal, SubtitleColor, TextAlignmentOptions.Center, font, true);
+            TMP_Text subtitle = CreateText(header, "SubtitleText", "직관을 뒤집는 확률과 논리 퍼즐", 34f, FontStyles.Normal, SubtitleColor, TextAlignmentOptions.Center, font, true);
             var subtitleElement = subtitle.gameObject.AddComponent<LayoutElement>();
-            subtitleElement.preferredHeight = 124f;
+            subtitleElement.preferredHeight = 108f;
 
             RectTransform gameList = CreateUiObject("GameList", safeArea);
             var gameListElement = gameList.gameObject.AddComponent<LayoutElement>();
@@ -880,7 +865,10 @@ namespace MindParadox.EditorTools
             scroll.inertia = true;
             scroll.scrollSensitivity = 40f;
 
-            GameContentSetup.AttachMenu(safeArea, gameList, content, canvasObject, cardPrefab.GetComponent<GameCardUI>(), font);
+            GameCardUI montyCard = CreateCardInstance(cardPrefab, content, "MontyHallCard");
+            GameCardUI birthdayCard = CreateCardInstance(cardPrefab, content, "BirthdayCard");
+            ApplyCard(montyCard, "Monty Hall", "문을 바꾸면 정말 확률이 올라갈까?", "Open Monty Hall", "MontyHall");
+            ApplyCard(birthdayCard, "Birthday Paradox", "23명만 모여도 같은 생일 확률이 50%를 넘는다?", "Open Birthday Paradox", "BirthdayParadox");
 
             RectTransform footer = CreateUiObject("Footer", safeArea);
             var footerElement = footer.gameObject.AddComponent<LayoutElement>();
@@ -894,9 +882,17 @@ namespace MindParadox.EditorTools
             footerLayout.childForceExpandWidth = true;
             footerLayout.childForceExpandHeight = false;
 
-            TMP_Text footerText = CreateText(footer, "FooterText", "More paradoxes coming soon", 34f, FontStyles.Normal, FooterColor, TextAlignmentOptions.Center, font, false);
+            TMP_Text footerText = CreateText(footer, "FooterText", "More paradoxes coming soon", 28f, FontStyles.Normal, FooterColor, TextAlignmentOptions.Center, font, false);
             var footerTextElement = footerText.gameObject.AddComponent<LayoutElement>();
-            footerTextElement.preferredHeight = 64f;
+            footerTextElement.preferredHeight = 60f;
+
+            var menu = canvasObject.AddComponent<MainMenuManager>();
+            var menuObject = new SerializedObject(menu);
+            SerializedProperty entries = menuObject.FindProperty("entries");
+            entries.arraySize = 2;
+            WriteEntry(entries.GetArrayElementAtIndex(0), montyCard, "Monty Hall", "문을 바꾸면 정말 확률이 올라갈까?", "Open Monty Hall", "MontyHall");
+            WriteEntry(entries.GetArrayElementAtIndex(1), birthdayCard, "Birthday Paradox", "23명만 모여도 같은 생일 확률이 50%를 넘는다?", "Open Birthday Paradox", "BirthdayParadox");
+            menuObject.ApplyModifiedPropertiesWithoutUndo();
 
             CreateEventSystem();
             Stretch(canvasObject.GetComponent<RectTransform>());
@@ -931,6 +927,46 @@ namespace MindParadox.EditorTools
             var module = eventObject.AddComponent<InputSystemUIInputModule>();
             if (module.actionsAsset == null)
                 module.AssignDefaultActions();
+        }
+
+        static GameCardUI CreateCardInstance(GameObject prefab, Transform parent, string objectName)
+        {
+            var instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
+            instance.name = objectName;
+            return instance.GetComponent<GameCardUI>();
+        }
+
+        static void ApplyCard(GameCardUI card, string title, string description, string logMessage, string sceneName)
+        {
+            var serializedCard = new SerializedObject(card);
+            serializedCard.FindProperty("playLogMessage").stringValue = logMessage;
+            serializedCard.FindProperty("targetSceneName").stringValue = sceneName;
+            serializedCard.ApplyModifiedPropertiesWithoutUndo();
+
+            var titleText = serializedCard.FindProperty("titleText").objectReferenceValue as TMP_Text;
+            var descriptionText = serializedCard.FindProperty("descriptionText").objectReferenceValue as TMP_Text;
+            if (titleText != null)
+            {
+                titleText.text = title;
+                PrefabUtility.RecordPrefabInstancePropertyModifications(titleText);
+            }
+
+            if (descriptionText != null)
+            {
+                descriptionText.text = description;
+                PrefabUtility.RecordPrefabInstancePropertyModifications(descriptionText);
+            }
+
+            PrefabUtility.RecordPrefabInstancePropertyModifications(card);
+        }
+
+        static void WriteEntry(SerializedProperty entry, GameCardUI card, string title, string description, string logMessage, string sceneName)
+        {
+            entry.FindPropertyRelative("card").objectReferenceValue = card;
+            entry.FindPropertyRelative("title").stringValue = title;
+            entry.FindPropertyRelative("description").stringValue = description;
+            entry.FindPropertyRelative("playLogMessage").stringValue = logMessage;
+            entry.FindPropertyRelative("targetSceneName").stringValue = sceneName;
         }
 
         static TMP_Text CreateText(

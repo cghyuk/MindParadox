@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace MindParadox.UI
@@ -46,6 +47,17 @@ namespace MindParadox.UI
         public void OnPlayClicked()
         {
             Debug.Log(playLogMessage);
+
+            if (string.IsNullOrEmpty(targetSceneName))
+                return;
+
+            if (!Application.CanStreamedLevelBeLoaded(targetSceneName))
+            {
+                Debug.LogWarning($"[Mind Paradox] Build Settings에서 '{targetSceneName}' 씬을 찾지 못했습니다.");
+                return;
+            }
+
+            SceneManager.LoadScene(targetSceneName);
         }
     }
 }

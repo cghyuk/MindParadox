@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3e6a0d49f2b508c9d5e7f9031426a33, type: 3}
+  m_Name: GameContentDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.GameContentDatabase
+  categories:
+  - {fileID: 11400000, guid: 11aa110011aa110011aa110011aa1100, type: 2}
+  - {fileID: 11400000, guid: 22bb220022bb220022bb220022bb2200, type: 2}
+  - {fileID: 11400000, guid: 33cc330033cc330033cc330033cc3300, type: 2}
+  - {fileID: 11400000, guid: 44dd440044dd440044dd440044dd4400, type: 2}
+  - {fileID: 11400000, guid: 55ee550055ee550055ee550055ee5500, type: 2}
+  - {fileID: 11400000, guid: 66ff660066ff660066ff660066ff6600, type: 2}
+  - {fileID: 11400000, guid: 77007700770077007700770077007700, type: 2}
+  - {fileID: 11400000, guid: 88008800880088008800880088008800, type: 2}
+  puzzles:
+  - {fileID: 11400000, guid: 99009900990099009900990099009900, type: 2}
+  - {fileID: 11400000, guid: aabbccddeeff00112233445566778899, type: 2}
