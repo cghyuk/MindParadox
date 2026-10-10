@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4171df1a1487f874683a27fab38e3590, type: 3}
+  m_Name: ExplanationData_BirthdayParadox
+  m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.ExplanationData
+  puzzleId: birthday-paradox
+  explanationTitle: "\uC65C 23\uBA85\uB9CC \uC788\uC5B4\uB3C4 50%\uB97C \uB118\uC744\uAE4C?"
+  explanationSummary: "\uD55C \uC0AC\uB78C\uC758 \uC0DD\uC77C\uB9CC \uBCF4\uBA74
+    \uB4DC\uBB38 \uC77C\uCC98\uB7FC \uBCF4\uC785\uB2C8\uB2E4.\n\uC2E4\uC81C\uB85C\uB294
+    \uBAA8\uB4E0 \uC0AC\uB78C \uC30D\uC744 \uC11C\uB85C \uBE44\uAD50\uD569\uB2C8\uB2E4."
+  explanationBody: "23\uBA85\uC758 \uC0AC\uB78C\uC5D0\uAC8C\uC11C \uB9CC\uB4E4\uC5B4\uC9C0\uB294
+    \uC30D\uC758 \uC218\uB294\n\n23 \xD7 22 / 2\n= 253\uC30D\n\n\uC0AC\uB78C \uC218\uAC00
+    \uB298\uC5B4\uB0A0\uC218\uB85D\n\uBE44\uAD50\uB418\uB294 \uC30D\uC758 \uC218\uB294
+    \uB9E4\uC6B0 \uBE60\uB974\uAC8C \uC99D\uAC00\uD569\uB2C8\uB2E4.\n\n\uB530\uB77C\uC11C
+    23\uBA85\uB9CC \uC788\uC5B4\uB3C4\n\uCD5C\uC18C \uB450 \uC0AC\uB78C\uC758 \uC0DD\uC77C\uC774
+    \uAC19\uC744 \uD655\uB960\uC740 \uC57D 50.7%\uC785\uB2C8\uB2E4."
+  explanationFormula: "P(match) = 1 - P(all different)\n\n\uBAA8\uB4E0 \uC0AC\uB78C\uC758
+    \uC0DD\uC77C\uC774 \uC11C\uB85C \uB2E4\uB97C \uD655\uB960\uC744 \uBA3C\uC800
+    \uACC4\uC0B0\uD558\uACE0\n\uADF8 \uAC12\uC744 1\uC5D0\uC11C \uBE8D\uB2C8\uB2E4."
+  explanationKey: explanation.birthday-paradox
+  titleKey: explanation.birthday-paradox.title
+  summaryKey: explanation.birthday-paradox.summary
+  bodyKey: explanation.birthday-paradox.body
+  formulaKey: explanation.birthday-paradox.formula

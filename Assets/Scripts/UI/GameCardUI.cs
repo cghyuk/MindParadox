@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace MindParadox.UI
 {
     /// <summary>
-    /// 메인 메뉴의 미니게임 카드. 제목, 설명, 이후 이동할 씬 이름을 설정한다.
+    /// 카테고리 화면의 문제 카드. 제목, 설명, 이후 이동할 씬 이름을 설정한다.
     /// </summary>
     public class GameCardUI : MonoBehaviour
     {

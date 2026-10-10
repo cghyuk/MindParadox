@@ -121,7 +121,6 @@ namespace MindParadox.EditorTools
 
                 if (HasGeneratedContent())
                 {
-                    FixOpenCanvasRect();
                     if (!IsFontSystemReady())
                     {
                         if (!SourceFontsImported())
@@ -207,26 +206,6 @@ namespace MindParadox.EditorTools
             return AssetDatabase.LoadAssetAtPath<SceneAsset>(BootScenePath) != null
                 && AssetDatabase.LoadAssetAtPath<SceneAsset>(MainScenePath) != null
                 && AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath) != null;
-        }
-
-        static void FixOpenCanvasRect()
-        {
-            var scene = EditorSceneManager.GetActiveScene();
-            if (scene.path != MainScenePath)
-                return;
-
-            var canvas = UnityEngine.Object.FindFirstObjectByType<Canvas>();
-            if (canvas == null)
-                return;
-
-            var rect = canvas.GetComponent<RectTransform>();
-            bool broken = rect.localScale == Vector3.zero || rect.anchorMax != Vector2.one;
-            if (!broken)
-                return;
-
-            Stretch(rect);
-            EditorSceneManager.MarkSceneDirty(scene);
-            EditorSceneManager.SaveScene(scene);
         }
 
         static void ImportTmpEssentials()
@@ -327,9 +306,9 @@ namespace MindParadox.EditorTools
                 Sprite roundedSprite = EnsureRoundedSprite();
 
                 EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-                GameObject prefab = CreateCardPrefab(fontAsset, roundedSprite);
+                CreateCardPrefab(fontAsset, roundedSprite);
 
-                CreateMainScene(prefab, fontAsset);
+                CreateMainScene(fontAsset);
                 EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene(), MainScenePath);
 
                 EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
@@ -663,7 +642,7 @@ namespace MindParadox.EditorTools
         {
             var root = new GameObject("GameCard", typeof(RectTransform));
             var rootRect = root.GetComponent<RectTransform>();
-            rootRect.sizeDelta = new Vector2(0f, 510f);
+            rootRect.sizeDelta = new Vector2(0f, 540f);
 
             var background = root.AddComponent<Image>();
             background.sprite = sprite;
@@ -681,21 +660,21 @@ namespace MindParadox.EditorTools
             layout.childForceExpandHeight = false;
 
             var element = root.AddComponent<LayoutElement>();
-            element.preferredHeight = 510f;
-            element.minHeight = 500f;
+            element.preferredHeight = 540f;
+            element.minHeight = 520f;
             element.flexibleWidth = 1f;
 
             var card = root.AddComponent<GameCardUI>();
 
             Image icon = CreateIcon(root.transform, sprite);
-            TMP_Text title = CreateText(root.transform, "TitleText", "Game Title", 54f, FontStyles.Bold, CardTitleColor, TextAlignmentOptions.TopLeft, font, false);
+            TMP_Text title = CreateText(root.transform, "TitleText", "Game Title", 60f, FontStyles.Bold, CardTitleColor, TextAlignmentOptions.TopLeft, font, false);
             var titleElement = title.gameObject.AddComponent<LayoutElement>();
-            titleElement.preferredHeight = 80f;
+            titleElement.preferredHeight = 88f;
             titleElement.flexibleHeight = 0f;
 
             CreateGap(root.transform, "TitleDescriptionGap", 22f);
 
-            TMP_Text description = CreateText(root.transform, "DescriptionText", "Description", 42f, FontStyles.Normal, CardBodyColor, TextAlignmentOptions.TopLeft, font, true);
+            TMP_Text description = CreateText(root.transform, "DescriptionText", "Description", 50f, FontStyles.Normal, CardBodyColor, TextAlignmentOptions.TopLeft, font, true);
             var descriptionElement = description.gameObject.AddComponent<LayoutElement>();
             descriptionElement.preferredHeight = 218f;
             descriptionElement.flexibleHeight = 0f;
@@ -769,17 +748,17 @@ namespace MindParadox.EditorTools
             button.colors = colors;
 
             var element = buttonObject.AddComponent<LayoutElement>();
-            element.preferredHeight = 108f;
+            element.preferredHeight = 120f;
             element.minHeight = 100f;
             element.flexibleHeight = 0f;
             element.flexibleWidth = 1f;
 
-            TMP_Text label = CreateText(buttonObject.transform, "Label", "PLAY", 42f, FontStyles.Bold, Color.white, TextAlignmentOptions.Center, font, false);
+            TMP_Text label = CreateText(buttonObject.transform, "Label", "PLAY", 48f, FontStyles.Bold, Color.white, TextAlignmentOptions.Center, font, false);
             Stretch(label.rectTransform);
             return button;
         }
 
-        static void CreateMainScene(GameObject cardPrefab, TMP_FontAsset font)
+        static void CreateMainScene(TMP_FontAsset font)
         {
             CreateCamera();
 
@@ -819,7 +798,7 @@ namespace MindParadox.EditorTools
 
             RectTransform header = CreateUiObject("Header", safeArea);
             var headerElement = header.gameObject.AddComponent<LayoutElement>();
-            headerElement.preferredHeight = 344f;
+            headerElement.preferredHeight = 368f;
             headerElement.flexibleHeight = 0f;
             var headerLayout = header.gameObject.AddComponent<VerticalLayoutGroup>();
             headerLayout.padding = new RectOffset(64, 64, 72, 16);
@@ -830,15 +809,15 @@ namespace MindParadox.EditorTools
             headerLayout.childForceExpandWidth = true;
             headerLayout.childForceExpandHeight = false;
 
-            TMP_Text headerTitle = CreateText(header, "TitleText", "Mind Paradox", 88f, FontStyles.Bold, TitleColor, TextAlignmentOptions.Center, font, false);
+            TMP_Text headerTitle = CreateText(header, "TitleText", "Mind Paradox", 70f, FontStyles.Bold, TitleColor, TextAlignmentOptions.Center, font, false);
             var headerTitleElement = headerTitle.gameObject.AddComponent<LayoutElement>();
-            headerTitleElement.preferredHeight = 116f;
+            headerTitleElement.preferredHeight = 96f;
 
-            TMP_Text subtitle = CreateText(header, "SubtitleText", "직관을 뒤집는 확률과 논리 퍼즐", 42f, FontStyles.Normal, SubtitleColor, TextAlignmentOptions.Center, font, true);
+            TMP_Text subtitle = CreateText(header, "SubtitleText", "직관을 뒤집는 확률과 논리 퍼즐", 50f, FontStyles.Normal, SubtitleColor, TextAlignmentOptions.Center, font, true);
             var subtitleElement = subtitle.gameObject.AddComponent<LayoutElement>();
-            subtitleElement.preferredHeight = 124f;
+            subtitleElement.preferredHeight = 148f;
 
-            RectTransform gameList = CreateUiObject("GameList", safeArea);
+            RectTransform gameList = CreateUiObject("CategoryScrollView", safeArea);
             var gameListElement = gameList.gameObject.AddComponent<LayoutElement>();
             gameListElement.flexibleHeight = 1f;
             gameListElement.flexibleWidth = 1f;
@@ -859,7 +838,7 @@ namespace MindParadox.EditorTools
 
             var contentLayout = content.gameObject.AddComponent<VerticalLayoutGroup>();
             contentLayout.padding = new RectOffset(48, 48, 8, 32);
-            contentLayout.spacing = 28f;
+            contentLayout.spacing = 24f;
             contentLayout.childAlignment = TextAnchor.UpperCenter;
             contentLayout.childControlWidth = true;
             contentLayout.childControlHeight = true;
@@ -880,11 +859,11 @@ namespace MindParadox.EditorTools
             scroll.inertia = true;
             scroll.scrollSensitivity = 40f;
 
-            GameContentSetup.AttachMenu(safeArea, gameList, content, canvasObject, cardPrefab.GetComponent<GameCardUI>(), font);
+            GameContentSetup.AttachMenu(safeArea, gameList, content, canvasObject, font);
 
             RectTransform footer = CreateUiObject("Footer", safeArea);
             var footerElement = footer.gameObject.AddComponent<LayoutElement>();
-            footerElement.preferredHeight = 140f;
+            footerElement.preferredHeight = 176f;
             footerElement.flexibleHeight = 0f;
             var footerLayout = footer.gameObject.AddComponent<VerticalLayoutGroup>();
             footerLayout.padding = new RectOffset(40, 40, 12, 36);
@@ -894,9 +873,9 @@ namespace MindParadox.EditorTools
             footerLayout.childForceExpandWidth = true;
             footerLayout.childForceExpandHeight = false;
 
-            TMP_Text footerText = CreateText(footer, "FooterText", "More paradoxes coming soon", 34f, FontStyles.Normal, FooterColor, TextAlignmentOptions.Center, font, false);
+            TMP_Text footerText = CreateText(footer, "FooterText", "More paradoxes coming soon", 48f, FontStyles.Normal, FooterColor, TextAlignmentOptions.Center, font, true);
             var footerTextElement = footerText.gameObject.AddComponent<LayoutElement>();
-            footerTextElement.preferredHeight = 64f;
+            footerTextElement.preferredHeight = 112f;
 
             CreateEventSystem();
             Stretch(canvasObject.GetComponent<RectTransform>());

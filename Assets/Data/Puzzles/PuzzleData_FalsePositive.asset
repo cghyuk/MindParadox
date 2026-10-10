@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d5f9c38e1a4f7b8c4d6e8f20315922, type: 3}
+  m_Name: PuzzleData_FalsePositive
+  m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.PuzzleData
+  puzzleId: false-positive
+  categoryId: probability
+  title: "\uAC80\uC0AC \uC815\uD655\uB3C4 \uD568\uC815"
+  shortDescription: "\uC591\uC131 \uACB0\uACFC\uAC00 \uB098\uC654\uB2E4\uBA74, \uC2E4\uC81C\uB85C \uC9C8\uBCD1\uC774 \uC788\uC744 \uD655\uB960\uC740?"
+  displayOrder: 7
+  sceneName: FalsePositiveScene
+  puzzleType: 
+  isDefaultFree: 0
+  unlockOrder: 7
+  icon: {fileID: 0}
+  difficulty: 1
+  isEnabled: 1
+  titleKey: puzzle.false-positive.title
+  shortDescriptionKey: puzzle.false-positive.short
+  explanation: {fileID: 11400000, guid: f6a153b290748f13c16284a5b6d7e8f9, type: 2}

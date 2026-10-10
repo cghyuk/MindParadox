@@ -24,3 +24,12 @@ MonoBehaviour:
   puzzles:
   - {fileID: 11400000, guid: 99009900990099009900990099009900, type: 2}
   - {fileID: 11400000, guid: aabbccddeeff00112233445566778899, type: 2}
+  - {fileID: 11400000, guid: b3a7c2d04e5f6789a1b2c3d4e5f60718, type: 2}
+  - {fileID: 11400000, guid: c4d8e1f23a6b4c0d9e7f5a1b3c8d2046, type: 2}
+  - {fileID: 11400000, guid: a15c0e7d4b2f4a6e8c1d3f507192a3b4, type: 2}
+  - {fileID: 11400000, guid: c37e208f6d415c809e3f517293a4c5d6, type: 2}
+  - {fileID: 11400000, guid: e59042a18f637e02b0517394a5c6d7e8, type: 2}
+  - {fileID: 11400000, guid: 07b264c3a1859024d27395b6c7d8e9fa, type: 2}
+  - {fileID: 11400000, guid: 29d486e5c3a71246f495b7d8e9f0a1bc, type: 2}
+  - {fileID: 11400000, guid: 6d18c02907eb568038d9f1b2c3d4e5f0, type: 2}
+  - {fileID: 11400000, guid: 4bf6a807e5c9346816b7d9f0a1b2c3de, type: 2}

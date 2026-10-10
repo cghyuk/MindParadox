@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4171df1a1487f874683a27fab38e3590, type: 3}
+  m_Name: ExplanationData_BertrandBox
+  m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.ExplanationData
+  puzzleId: bertrand-box
+  explanationTitle: "\uC65C \uB0A8\uC740 \uAE08\uD654\uC758 \uD655\uB960\uC774 2/3\uC77C\uAE4C?"
+  explanationSummary: "\uAE08\uD654\uAC00 \uB098\uC628 \uACBD\uC6B0\uB97C \uD558\uB098\uC529
+    \uC138\uBA74\n\uC138 \uAC00\uC9C0 \uC911 \uB450 \uAC00\uC9C0\uB294 \uB0A8\uC740
+    \uB3D9\uC804\uB3C4 \uAE08\uD654\uC785\uB2C8\uB2E4."
+  explanationBody: "\uAE08\uD654\uAC00 \uB098\uC62C \uC218 \uC788\uB294 \uACBD\uC6B0\uB294
+    \uC138 \uAC00\uC9C0\uC785\uB2C8\uB2E4.\n\nGG \uC0C1\uC790\uC758 \uCCAB \uBC88\uC9F8
+    \uAE08\uD654\nGG \uC0C1\uC790\uC758 \uB450 \uBC88\uC9F8 \uAE08\uD654\nGS \uC0C1\uC790\uC758
+    \uAE08\uD654\n\n\uB0A8\uC740 \uB3D9\uC804\uB3C4 \uAE08\uD654\uC778 \uACBD\uC6B0\uB294\nGG
+    \uC0C1\uC790\uC758 \uB450 \uAC00\uC9C0\uC785\uB2C8\uB2E4."
+  explanationFormula: 2 / 3 = 66.7%
+  explanationKey: explanation.bertrand-box
+  titleKey: explanation.bertrand-box.title
+  summaryKey: explanation.bertrand-box.summary
+  bodyKey: explanation.bertrand-box.body
+  formulaKey: explanation.bertrand-box.formula

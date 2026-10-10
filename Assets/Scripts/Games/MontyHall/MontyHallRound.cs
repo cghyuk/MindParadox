@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace MindParadox.Games.MontyHall
 {
@@ -10,40 +11,75 @@ namespace MindParadox.Games.MontyHall
     }
 
     /// <summary>
-    /// 문 3개 몬티홀 한 판. 자동차는 한 문, 나머지는 염소다.
+    /// N개 문 몬티홀 한 판. 자동차는 한 문이고, 마지막에는 닫힌 문이 두 개만 남는다.
     /// </summary>
     public sealed class MontyHallRound
     {
-        public const int DoorCount = 3;
+        public const int MinDoors = 3;
+        public const int MaxDoors = 100;
 
         readonly Random random;
+        readonly bool[] opened;
 
-        public MontyHallRound()
-            : this(new Random())
+        public MontyHallRound(int doorCount, Random random = null)
         {
-        }
-
-        public MontyHallRound(Random random)
-        {
+            DoorCount = ClampCount(doorCount);
             this.random = random ?? new Random();
+            opened = new bool[DoorCount];
         }
 
+        public int DoorCount { get; }
         public MontyHallPhase Phase { get; private set; } = MontyHallPhase.ChooseDoor;
         public int CarDoor { get; private set; }
         public int PlayerDoor { get; private set; } = -1;
-        public int RevealedDoor { get; private set; } = -1;
+        public int AlternateDoor { get; private set; } = -1;
+        public int OpenedCount { get; private set; }
         public int FinalDoor { get; private set; } = -1;
         public bool Stayed { get; private set; }
         public bool Won => Phase == MontyHallPhase.Result && FinalDoor == CarDoor;
+
+        public static int ClampCount(int doorCount)
+        {
+            if (doorCount < MinDoors)
+                return MinDoors;
+
+            if (doorCount > MaxDoors)
+                return MaxDoors;
+
+            return doorCount;
+        }
+
+        public static string StayPercent(int doorCount)
+        {
+            return FormatPercent(100.0 / ClampCount(doorCount));
+        }
+
+        public static string SwitchPercent(int doorCount)
+        {
+            int count = ClampCount(doorCount);
+            return FormatPercent(100.0 * (count - 1) / count);
+        }
+
+        public bool IsOpened(int doorIndex)
+        {
+            if (doorIndex < 0 || doorIndex >= DoorCount)
+                return false;
+
+            return opened[doorIndex];
+        }
 
         public void Begin()
         {
             CarDoor = random.Next(DoorCount);
             PlayerDoor = -1;
-            RevealedDoor = -1;
+            AlternateDoor = -1;
             FinalDoor = -1;
+            OpenedCount = 0;
             Stayed = false;
             Phase = MontyHallPhase.ChooseDoor;
+
+            for (int i = 0; i < opened.Length; i++)
+                opened[i] = false;
         }
 
         public void ChooseDoor(int doorIndex)
@@ -55,7 +91,7 @@ namespace MindParadox.Games.MontyHall
                 return;
 
             PlayerDoor = doorIndex;
-            RevealedDoor = PickGoatDoor();
+            LeaveOneOtherDoorClosed();
             Phase = MontyHallPhase.ChooseStayOrSwitch;
         }
 
@@ -74,18 +110,32 @@ namespace MindParadox.Games.MontyHall
             if (Phase != MontyHallPhase.ChooseStayOrSwitch)
                 return;
 
-            FinalDoor = OtherClosedDoor();
+            FinalDoor = AlternateDoor;
             Stayed = false;
             Phase = MontyHallPhase.Result;
         }
 
-        int PickGoatDoor()
+        void LeaveOneOtherDoorClosed()
+        {
+            AlternateDoor = PlayerDoor == CarDoor ? RandomOtherDoor() : CarDoor;
+            OpenedCount = 0;
+
+            for (int i = 0; i < DoorCount; i++)
+            {
+                bool open = i != PlayerDoor && i != AlternateDoor;
+                opened[i] = open;
+                if (open)
+                    OpenedCount++;
+            }
+        }
+
+        int RandomOtherDoor()
         {
             int pick = -1;
             int matches = 0;
             for (int i = 0; i < DoorCount; i++)
             {
-                if (i == PlayerDoor || i == CarDoor)
+                if (i == PlayerDoor)
                     continue;
 
                 matches++;
@@ -96,15 +146,13 @@ namespace MindParadox.Games.MontyHall
             return pick;
         }
 
-        int OtherClosedDoor()
+        static string FormatPercent(double percent)
         {
-            for (int i = 0; i < DoorCount; i++)
-            {
-                if (i != PlayerDoor && i != RevealedDoor)
-                    return i;
-            }
+            double rounded = Math.Round(percent, 1, MidpointRounding.AwayFromZero);
+            if (Math.Abs(rounded - Math.Round(rounded, MidpointRounding.AwayFromZero)) < 0.05)
+                return Math.Round(rounded, MidpointRounding.AwayFromZero).ToString("0", CultureInfo.InvariantCulture) + "%";
 
-            return PlayerDoor;
+            return rounded.ToString("0.0", CultureInfo.InvariantCulture) + "%";
         }
     }
 }

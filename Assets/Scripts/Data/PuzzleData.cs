@@ -31,5 +31,10 @@ namespace MindParadox.Data
         public bool isEnabled = true;
         public string titleKey;
         public string shortDescriptionKey;
+
+        /// <summary>
+        /// 설명 팝업 문장. 다른 퍼즐도 이 필드에 ExplanationData만 연결하면 된다.
+        /// </summary>
+        public ExplanationData explanation;
     }
 }

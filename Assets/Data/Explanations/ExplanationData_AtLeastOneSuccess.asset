@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4171df1a1487f874683a27fab38e3590, type: 3}
+  m_Name: ExplanationData_AtLeastOneSuccess
+  m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.ExplanationData
+  puzzleId: at-least-one-success
+  explanationTitle: "\uC65C 30% \u00D7 3 = 90%\uAC00 \uC544\uB2D0\uAE4C?"
+  explanationSummary: "\uC801\uC5B4\uB3C4 \uD55C \uBC88 \uC131\uACF5\uC740\n\uBAA8\uB450 \uC2E4\uD328\uD560 \uD655\uB960\uC744 1\uC5D0\uC11C \uBE7C\uC11C \uAD6C\uD569\uB2C8\uB2E4."
+  explanationBody: "\uC801\uC5B4\uB3C4 \uD55C \uBC88 \uC131\uACF5\uC744 \uC9C1\uC811 \uB354\uD558\uB294 \uAC83\uBCF4\uB2E4\n\uD55C \uBC88\uB3C4 \uC131\uACF5\uD558\uC9C0 \uC54A\uC744 \uD655\uB960\uC744 \uBA3C\uC800 \uAD6C\uD558\uB294 \uAC83\uC774 \uC27D\uC2B5\uB2C8\uB2E4.\n\n\uD55C \uBC88 \uC2E4\uD328\uD560 \uD655\uB960\uC740 70%\uC785\uB2C8\uB2E4.\n\n3\uBC88 \uBAA8\uB450 \uC2E4\uD328\uD560 \uD655\uB960\uC740\n0.7 \u00D7 0.7 \u00D7 0.7\n= 0.343\n= 34.3%\n\n\uB530\uB77C\uC11C \uC801\uC5B4\uB3C4 \uD55C \uBC88 \uC131\uACF5\uD560 \uD655\uB960\uC740\n1 - 0.343\n= 0.657\n= 65.7%\uC785\uB2C8\uB2E4."
+  explanationFormula: 1 - (1 - p)^n
+  explanationKey: explanation.at-least-one-success
+  titleKey: explanation.at-least-one-success.title
+  summaryKey: explanation.at-least-one-success.summary
+  bodyKey: explanation.at-least-one-success.body
+  formulaKey: explanation.at-least-one-success.formula

@@ -1,24 +1,18 @@
 ﻿using MindParadox.Core;
 using MindParadox.Data;
-using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace MindParadox.UI
 {
     /// <summary>
-    /// 카테고리를 고르면 그 문제만 GameCard로 만든다. 카드는 씬에 미리 두지 않는다.
+    /// 첫 화면에서 카테고리 카드만 만든다. 문제는 CategoryScene에서 보여 준다.
     /// </summary>
     public class MainMenuManager : MonoBehaviour
     {
         [SerializeField] GameContentDatabase database;
-        [SerializeField] GameCardUI cardPrefab;
-        [SerializeField] RectTransform cardContent;
+        [SerializeField] CategoryCardUI categoryCardPrefab;
         [SerializeField] RectTransform categoryContent;
-        [SerializeField] TMP_FontAsset uiFont;
-        [SerializeField] Sprite roundedSprite;
-
-        CategoryChipUI[] chips = System.Array.Empty<CategoryChipUI>();
-        string selectedCategoryId;
 
         void Start()
         {
@@ -28,91 +22,48 @@ namespace MindParadox.UI
         void BuildCategories()
         {
             ClearChildren(categoryContent);
-            chips = System.Array.Empty<CategoryChipUI>();
 
-            if (database == null || categoryContent == null)
+            if (database == null || categoryContent == null || categoryCardPrefab == null)
             {
-                Debug.LogError("[Mind Paradox] 메인 메뉴에 콘텐츠 데이터베이스 또는 카테고리 영역이 없습니다.");
+                Debug.LogError("[Mind Paradox] 메인 메뉴에 콘텐츠 데이터베이스 또는 카테고리 카드가 없습니다.");
                 return;
             }
 
             CategoryData[] categories = database.GetCategories();
-            chips = new CategoryChipUI[categories.Length];
-            string firstEnabled = null;
-
             for (int i = 0; i < categories.Length; i++)
             {
-                var chipObject = new GameObject(categories[i].categoryId, typeof(RectTransform));
-                chipObject.transform.SetParent(categoryContent, false);
-                var chip = chipObject.AddComponent<CategoryChipUI>();
-                chip.Build(categories[i], uiFont, roundedSprite, SelectCategory);
-                chips[i] = chip;
+                CategoryData category = categories[i];
+                if (category == null)
+                    continue;
 
-                if (firstEnabled == null && categories[i].isEnabled)
-                    firstEnabled = categories[i].categoryId;
+                PuzzleData[] puzzles = database.GetPuzzles(category.categoryId);
+                CategoryAccessState state = UnlockManager.GetAccessState(category, puzzles);
+                CategoryCardUI card = Instantiate(categoryCardPrefab, categoryContent);
+                card.name = category.categoryId;
+                card.Bind(category, puzzles.Length, state, () => OpenCategory(category));
             }
-
-            if (!string.IsNullOrEmpty(firstEnabled))
-                SelectCategory(FindCategory(firstEnabled));
-            else
-                ShowPuzzles(null);
         }
 
-        void SelectCategory(CategoryData category)
+        void OpenCategory(CategoryData category)
         {
             if (category == null || !category.isEnabled)
                 return;
 
-            selectedCategoryId = category.categoryId;
-            for (int i = 0; i < chips.Length; i++)
-            {
-                if (chips[i] == null)
-                    continue;
-
-                chips[i].SetSelected(chips[i].Category != null && chips[i].Category.categoryId == selectedCategoryId);
-            }
-
-            ShowPuzzles(category);
-        }
-
-        void ShowPuzzles(CategoryData category)
-        {
-            ClearChildren(cardContent);
-
-            if (database == null || cardContent == null || cardPrefab == null || category == null)
+            PuzzleData[] puzzles = database.GetPuzzles(category.categoryId);
+            if (puzzles.Length == 0)
                 return;
 
-            PuzzleData[] puzzles = database.GetPuzzles(category.categoryId);
-            for (int i = 0; i < puzzles.Length; i++)
+            if (UnlockManager.GetAccessState(category, puzzles) == CategoryAccessState.Locked)
+                return;
+
+            CategorySession.SelectedCategoryId = category.categoryId;
+            if (!Application.CanStreamedLevelBeLoaded(CategorySession.SceneName))
             {
-                PuzzleData puzzle = puzzles[i];
-                GameCardUI card = Instantiate(cardPrefab, cardContent);
-                card.name = puzzle.puzzleId;
-
-                bool canPlay = UnlockManager.CanPlay(puzzle, category);
-                string description = puzzle.shortDescription;
-                if (!canPlay)
-                    description = string.IsNullOrEmpty(description) ? "잠금" : description + "\n잠금";
-
-                card.Setup(
-                    puzzle.title,
-                    description,
-                    canPlay ? "Open " + puzzle.title : "Locked " + puzzle.puzzleId,
-                    canPlay ? puzzle.sceneName : "",
-                    puzzle.icon);
-            }
-        }
-
-        CategoryData FindCategory(string categoryId)
-        {
-            CategoryData[] categories = database.GetCategories();
-            for (int i = 0; i < categories.Length; i++)
-            {
-                if (categories[i].categoryId == categoryId)
-                    return categories[i];
+                Debug.LogWarning("[Mind Paradox] Build Settings에서 CategoryScene을 찾지 못했습니다.");
+                return;
             }
 
-            return null;
+            SceneManager.LoadScene(CategorySession.SceneName);
         }
 
         static void ClearChildren(RectTransform parent)

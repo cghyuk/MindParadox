@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: CategoryData_Logic
   m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.CategoryData
   categoryId: logic
-  displayName: Logic
-  description: "논리와 추론 문제"
+  displayName: "\uB17C\uB9AC"
+  description: "논리적으로 맞아 보이지만 예상 밖의 답이 나오는 문제"
   displayOrder: 1
+  puzzleCapacity: 100
   icon: {fileID: 0}
   unlockProductId: logic_pack
   isEnabled: 0

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d5f9c38e1a4f7b8c4d6e8f20315922, type: 3}
+  m_Name: PuzzleData_ThreePrisoners
+  m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.PuzzleData
+  puzzleId: three-prisoners
+  categoryId: probability
+  title: "\uC138 \uC8C4\uC218 \uBB38\uC81C"
+  shortDescription: "\uAC04\uC218\uAC00 B\uC758 \uCC98\uD615\uC744 \uB9D0\uD55C \uB4A4, A\uAC00 \uC0AC\uBA74\uB420 \uD655\uB960\uC740?"
+  displayOrder: 4
+  sceneName: ThreePrisonersScene
+  puzzleType: 
+  isDefaultFree: 0
+  unlockOrder: 4
+  icon: {fileID: 0}
+  difficulty: 1
+  isEnabled: 1
+  titleKey: puzzle.three-prisoners.title
+  shortDescriptionKey: puzzle.three-prisoners.short
+  explanation: {fileID: 11400000, guid: e7f1a2b34c5d6e7f8091a2b3c4d5e6f7, type: 2}

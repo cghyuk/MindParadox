@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: CategoryData_Science
   m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.CategoryData
   categoryId: science
-  displayName: Science
-  description: "상식과 다른 과학 문제"
+  displayName: "\uACFC\uD559"
+  description: "상식과 다르게 보이는 과학 문제"
   displayOrder: 7
+  puzzleCapacity: 100
   icon: {fileID: 0}
   unlockProductId: science_pack
   isEnabled: 0

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4171df1a1487f874683a27fab38e3590, type: 3}
+  m_Name: ExplanationData_FalsePositive
+  m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.ExplanationData
+  puzzleId: false-positive
+  explanationTitle: "99% \uC815\uD655\uD55C\uB370 \uC65C \uC2E4\uC81C \uD655\uB960\uC740 9%\uC77C\uAE4C?"
+  explanationSummary: "\uAC80\uC0AC \uC815\uD655\uB3C4\uB9CC \uBCF4\uBA74 \uC548 \uB418\uACE0\n\uC9C8\uBCD1\uC758 \uAE30\uC800\uC728\uC744 \uAC19\uC774 \uBD10\uC57C \uD569\uB2C8\uB2E4."
+  explanationBody: "1000\uBA85 \uAE30\uC900\uC73C\uB85C \uBCF4\uBA74\n\n\uC9C8\uBCD1 \uC788\uC74C 1\uBA85\n\u2192 \uC591\uC131 \uC57D 0.99\uBA85\n\n\uC9C8\uBCD1 \uC5C6\uC74C 999\uBA85\n\u2192 \uC704\uC591\uC131 \uC57D 9.99\uBA85\n\n\uC804\uCCB4 \uC591\uC131\uC740 \uC57D 10.98\uBA85\uC774\uACE0\n\uC2E4\uC81C \uD658\uC790\uB294 \uC57D 0.99\uBA85\uC785\uB2C8\uB2E4.\n\n0.99 / 10.98 \u2248 9%\uC785\uB2C8\uB2E4."
+  explanationFormula: "0.99 / 10.98 \u2248 9%"
+  explanationKey: explanation.false-positive
+  titleKey: explanation.false-positive.title
+  summaryKey: explanation.false-positive.summary
+  bodyKey: explanation.false-positive.body
+  formulaKey: explanation.false-positive.formula

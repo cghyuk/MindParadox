@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4171df1a1487f874683a27fab38e3590, type: 3}
+  m_Name: ExplanationData_BoyGirlParadox
+  m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.ExplanationData
+  puzzleId: boy-girl-paradox
+  explanationTitle: "\uC65C 1/2\uAC00 \uC544\uB2D0\uAE4C?"
+  explanationSummary: "\uC801\uC5B4\uB3C4 \uD55C \uBA85\uC774 \uB0A8\uC790\uB77C\uB294 \uC870\uAC74\uC5D0\uC11C\n\uC5EC-\uC5EC\uB294 \uBE60\uC9C0\uACE0 \uC138 \uACBD\uC6B0\uB9CC \uB0A8\uC2B5\uB2C8\uB2E4."
+  explanationBody: "\uAC00\uB2A5\uD55C \uC131\uBCC4 \uC870\uD569\uC744 \uC21C\uC11C\uB97C \uAD6C\uBD84\uD558\uBA74\n\n\uB0A8-\uB0A8\n\uB0A8-\uC5EC\n\uC5EC-\uB0A8\n\uC5EC-\uC5EC\n\n\uC801\uC5B4\uB3C4 \uD55C \uBA85\uC774 \uB0A8\uC790\uB77C\uB294 \uC870\uAC74 \uB54C\uBB38\uC5D0\n\uC5EC-\uC5EC\uB294 \uC81C\uC678\uB429\uB2C8\uB2E4.\n\n\uB0A8\uC740 \uC138 \uACBD\uC6B0 \uC911 \uB0A8-\uB0A8\uC740 \uD558\uB098\uC774\uBBC0\uB85C 1/3\uC785\uB2C8\uB2E4."
+  explanationFormula: "1 / 3 \u2248 33.3%"
+  explanationKey: explanation.boy-girl-paradox
+  titleKey: explanation.boy-girl-paradox.title
+  summaryKey: explanation.boy-girl-paradox.summary
+  bodyKey: explanation.boy-girl-paradox.body
+  formulaKey: explanation.boy-girl-paradox.formula

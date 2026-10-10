@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: CategoryData_Probability
   m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.CategoryData
   categoryId: probability
-  displayName: Probability
-  description: "확률을 직관과 다르게 만드는 문제"
+  displayName: "\uD655\uB960"
+  description: "확률과 선택이 직관을 어떻게 속이는지 알아보세요."
   displayOrder: 0
+  puzzleCapacity: 100
   icon: {fileID: 0}
   unlockProductId: probability_pack
   isEnabled: 1

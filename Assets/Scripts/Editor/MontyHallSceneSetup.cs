@@ -24,6 +24,7 @@ namespace MindParadox.EditorTools
         const string FontPath = "Assets/Fonts/BRLNSR SDF.asset";
         const string KoreanFontPath = "Assets/Fonts/NanumGothic SDF.asset";
         const string SpritePath = "Assets/Sprites/UIRounded.png";
+        const string DoorPrefabPath = "Assets/Prefabs/MontyHallDoor.prefab";
         const string SceneName = "MontyHallScene";
 
         static readonly Color BackgroundColor = new Color32(0x10, 0x18, 0x26, 0xFF);
@@ -79,13 +80,41 @@ namespace MindParadox.EditorTools
             }
 
             PointOpenMainMenuAtMontyHall();
-            if (AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath) == null)
+            bool missingScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath) == null;
+            bool oldLayout = !missingScene && File.Exists(ScenePath) && !File.ReadAllText(ScenePath).Contains("m_Name: ModePanel");
+            if (missingScene || oldLayout)
             {
                 BuildScene();
                 ValidateRules();
             }
 
             AddToBuildSettings();
+            RepairDoorPrefabReference();
+        }
+
+        static void RepairDoorPrefabReference()
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(DoorPrefabPath);
+            MontyHallDoorUI door = prefab != null ? prefab.GetComponent<MontyHallDoorUI>() : null;
+            if (door == null)
+                return;
+
+            var scene = EditorSceneManager.GetActiveScene();
+            if (scene.path != ScenePath)
+                return;
+
+            var manager = UnityEngine.Object.FindFirstObjectByType<MontyHallGameManager>();
+            if (manager == null)
+                return;
+
+            var serialized = new SerializedObject(manager);
+            SerializedProperty property = serialized.FindProperty("doorPrefab");
+            if (property == null || property.objectReferenceValue == door)
+                return;
+
+            property.objectReferenceValue = door;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            EditorSceneManager.SaveScene(scene);
         }
 
         static bool AssetsReady()
@@ -106,7 +135,9 @@ namespace MindParadox.EditorTools
             {
                 var menuObject = new SerializedObject(menu);
                 SerializedProperty entries = menuObject.FindProperty("entries");
-                for (int i = 0; i < entries.arraySize; i++)
+                if (entries == null)
+                    entries = menuObject.FindProperty("m_Entries");
+                for (int i = 0; entries != null && i < entries.arraySize; i++)
                 {
                     SerializedProperty entry = entries.GetArrayElementAtIndex(i);
                     if (entry.FindPropertyRelative("title").stringValue != "Monty Hall")
@@ -156,6 +187,7 @@ namespace MindParadox.EditorTools
             TMP_FontAsset font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(FontPath);
             Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(SpritePath);
             AddKoreanGlyphs();
+            MontyHallDoorUI doorPrefab = EnsureDoorPrefab(font, sprite);
 
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             CreateCamera();
@@ -196,50 +228,208 @@ namespace MindParadox.EditorTools
 
             RectTransform header = CreateUiObject("Header", safeArea);
             var headerElement = header.gameObject.AddComponent<LayoutElement>();
-            headerElement.preferredHeight = 188f;
+            headerElement.preferredHeight = 510f;
             headerElement.flexibleHeight = 0f;
             var headerLayout = header.gameObject.AddComponent<VerticalLayoutGroup>();
-            headerLayout.padding = new RectOffset(16, 16, 72, 8);
-            headerLayout.spacing = 0f;
-            headerLayout.childAlignment = TextAnchor.MiddleCenter;
+            headerLayout.padding = new RectOffset(8, 8, 48, 8);
+            headerLayout.spacing = 14f;
+            headerLayout.childAlignment = TextAnchor.UpperCenter;
             headerLayout.childControlWidth = true;
             headerLayout.childControlHeight = true;
             headerLayout.childForceExpandWidth = true;
             headerLayout.childForceExpandHeight = false;
 
-            TMP_Text title = CreateText(header, "TitleText", "Monty Hall", 72f, FontStyles.Bold, TitleColor, TextAlignmentOptions.Center, font, false);
+            RectTransform topRow = CreateUiObject("TopRow", header);
+            var topElement = topRow.gameObject.AddComponent<LayoutElement>();
+            topElement.preferredHeight = 88f;
+            topElement.flexibleHeight = 0f;
+            var topLayout = topRow.gameObject.AddComponent<HorizontalLayoutGroup>();
+            topLayout.childAlignment = TextAnchor.MiddleLeft;
+            topLayout.childControlWidth = true;
+            topLayout.childControlHeight = true;
+            topLayout.childForceExpandWidth = false;
+            topLayout.childForceExpandHeight = false;
+            topLayout.spacing = PuzzleHeaderBar.Spacing;
+            Button back = CreateActionButton(topRow, "BackButton", UiText.BackLabel, font, sprite);
+            var backElement = back.gameObject.GetComponent<LayoutElement>();
+            backElement.preferredWidth = PuzzleHeaderBar.ButtonWidth;
+            backElement.minWidth = PuzzleHeaderBar.ButtonWidth;
+            backElement.preferredHeight = PuzzleHeaderBar.ButtonHeight;
+            backElement.minHeight = PuzzleHeaderBar.ButtonHeight;
+            backElement.flexibleWidth = 0f;
+
+            RectTransform topSpacer = CreateUiObject("Spacer", topRow);
+            var topSpacerElement = topSpacer.gameObject.AddComponent<LayoutElement>();
+            topSpacerElement.flexibleWidth = 1f;
+            topSpacerElement.preferredHeight = 88f;
+
+            Button mode = CreateActionButton(topRow, "ModeButton", "모드", font, sprite);
+            var modeElement = mode.gameObject.GetComponent<LayoutElement>();
+            modeElement.preferredWidth = 220f;
+            modeElement.flexibleWidth = 0f;
+            mode.interactable = false;
+
+            TMP_Text title = CreateText(header, "TitleText", "몬티홀 문제", 70f, FontStyles.Bold, TitleColor, TextAlignmentOptions.Center, font, false);
             var titleElement = title.gameObject.AddComponent<LayoutElement>();
             titleElement.preferredHeight = 100f;
             titleElement.flexibleHeight = 0f;
 
-            TMP_Text status = CreateText(safeArea, "StatusText", "문 하나를 고르세요.", 40f, FontStyles.Normal, TitleColor, TextAlignmentOptions.Center, font, true);
-            var statusElement = status.gameObject.AddComponent<LayoutElement>();
-            statusElement.preferredHeight = 180f;
-            statusElement.flexibleHeight = 0f;
+            TMP_Text description = CreateText(header, "DescriptionText", "문이 많아질수록\n바꾸기의 확률은 어떻게 달라질까요?", 60f, FontStyles.Normal, new Color32(0xA8, 0xB3, 0xC7, 0xFF), TextAlignmentOptions.Center, font, true);
+            var descriptionElement = description.gameObject.AddComponent<LayoutElement>();
+            descriptionElement.preferredHeight = 220f;
+            descriptionElement.flexibleHeight = 0f;
 
-            RectTransform doorRow = CreateUiObject("DoorRow", safeArea);
-            var doorRowElement = doorRow.gameObject.AddComponent<LayoutElement>();
-            doorRowElement.preferredHeight = 280f;
-            doorRowElement.flexibleHeight = 0f;
-            var doorLayout = doorRow.gameObject.AddComponent<HorizontalLayoutGroup>();
-            doorLayout.spacing = 16f;
-            doorLayout.childAlignment = TextAnchor.MiddleCenter;
-            doorLayout.childControlWidth = true;
-            doorLayout.childControlHeight = true;
-            doorLayout.childForceExpandWidth = true;
-            doorLayout.childForceExpandHeight = false;
+            RectTransform modePanel = CreateUiObject("ModePanel", safeArea);
+            var modePanelElement = modePanel.gameObject.AddComponent<LayoutElement>();
+            modePanelElement.flexibleHeight = 1f;
+            modePanelElement.minHeight = 640f;
+            var modeLayout = modePanel.gameObject.AddComponent<VerticalLayoutGroup>();
+            modeLayout.spacing = 22f;
+            modeLayout.padding = new RectOffset(8, 8, 8, 8);
+            modeLayout.childAlignment = TextAnchor.UpperCenter;
+            modeLayout.childControlWidth = true;
+            modeLayout.childControlHeight = true;
+            modeLayout.childForceExpandWidth = true;
+            modeLayout.childForceExpandHeight = false;
 
-            var doors = new Button[MontyHallRound.DoorCount];
-            var doorLabels = new TMP_Text[MontyHallRound.DoorCount];
-            var doorImages = new Image[MontyHallRound.DoorCount];
-            for (int i = 0; i < MontyHallRound.DoorCount; i++)
-            {
-                doors[i] = CreateDoorButton(doorRow, "Door" + (i + 1), (i + 1).ToString(), font, sprite, out doorLabels[i], out doorImages[i]);
-            }
+            Button threeDoors = CreateActionButton(modePanel, "ThreeDoorButton", "3 Doors", font, sprite);
+            StyleModeChoice(threeDoors);
+            CreateHint(modePanel, "기본 몬티홀 문제", font);
+            Button tenDoors = CreateActionButton(modePanel, "TenDoorButton", "10 Doors", font, sprite);
+            StyleModeChoice(tenDoors);
+            CreateHint(modePanel, "문 10개로 확률 차이를 더 크게 체험", font);
+            Button custom = CreateActionButton(modePanel, "CustomButton", "Custom", font, sprite);
+            StyleModeChoice(custom);
+            CreateHint(modePanel, "사용자가 문 개수를 직접 선택", font);
 
-            RectTransform choiceRow = CreateUiObject("ChoiceRow", safeArea);
+            RectTransform customPanel = CreateUiObject("CustomPanel", modePanel);
+            customPanel.gameObject.SetActive(false);
+            var customElement = customPanel.gameObject.AddComponent<LayoutElement>();
+            customElement.preferredHeight = 560f;
+            customElement.flexibleHeight = 0f;
+            var customLayout = customPanel.gameObject.AddComponent<VerticalLayoutGroup>();
+            customLayout.spacing = 12f;
+            customLayout.childAlignment = TextAnchor.UpperCenter;
+            customLayout.childControlWidth = true;
+            customLayout.childControlHeight = true;
+            customLayout.childForceExpandWidth = true;
+            customLayout.childForceExpandHeight = false;
+
+            RectTransform countRow = CreateUiObject("CountRow", customPanel);
+            var countRowElement = countRow.gameObject.AddComponent<LayoutElement>();
+            countRowElement.preferredHeight = 88f;
+            var countLayout = countRow.gameObject.AddComponent<HorizontalLayoutGroup>();
+            countLayout.spacing = 12f;
+            countLayout.childAlignment = TextAnchor.MiddleCenter;
+            countLayout.childControlWidth = true;
+            countLayout.childControlHeight = true;
+            countLayout.childForceExpandWidth = false;
+            countLayout.childForceExpandHeight = false;
+            Button minus = CreateActionButton(countRow, "MinusButton", "-", font, sprite);
+            var minusElement = minus.gameObject.GetComponent<LayoutElement>();
+            minusElement.preferredWidth = 120f;
+            minusElement.flexibleWidth = 0f;
+            TMP_Text customCount = CreateText(countRow, "CustomCountText", "Doors: 10", 60f, FontStyles.Bold, TitleColor, TextAlignmentOptions.Center, font, false);
+            var customCountElement = customCount.gameObject.AddComponent<LayoutElement>();
+            customCountElement.flexibleWidth = 1f;
+            customCountElement.preferredHeight = 96f;
+            Button plus = CreateActionButton(countRow, "PlusButton", "+", font, sprite);
+            var plusElement = plus.gameObject.GetComponent<LayoutElement>();
+            plusElement.preferredWidth = 120f;
+            plusElement.flexibleWidth = 0f;
+
+            Slider doorSlider = CreateDoorSlider(customPanel);
+            TMP_Text customOdds = CreateText(customPanel, "CustomOddsText", "Stay:\n10%\n\nSwitch:\n90%", 50f, FontStyles.Normal, TitleColor, TextAlignmentOptions.Center, font, true);
+            var customOddsElement = customOdds.gameObject.AddComponent<LayoutElement>();
+            customOddsElement.preferredHeight = 280f;
+            Button customStart = CreateActionButton(customPanel, "CustomStartButton", "시작", font, sprite);
+
+            RectTransform gameArea = CreateUiObject("GameArea", safeArea);
+            gameArea.gameObject.SetActive(false);
+            var gameAreaElement = gameArea.gameObject.AddComponent<LayoutElement>();
+            gameAreaElement.flexibleHeight = 1f;
+            gameAreaElement.minHeight = 320f;
+            var scroll = gameArea.gameObject.AddComponent<ScrollRect>();
+            scroll.horizontal = false;
+            scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Elastic;
+            scroll.scrollSensitivity = 40f;
+
+            RectTransform viewport = CreateStretch("Viewport", gameArea);
+            viewport.gameObject.AddComponent<RectMask2D>();
+            var viewportImage = viewport.gameObject.AddComponent<Image>();
+            viewportImage.color = new Color(1f, 1f, 1f, 0.01f);
+            scroll.viewport = viewport;
+
+            RectTransform content = CreateUiObject("Content", viewport);
+            content.anchorMin = new Vector2(0f, 1f);
+            content.anchorMax = new Vector2(1f, 1f);
+            content.pivot = new Vector2(0.5f, 1f);
+            content.offsetMin = Vector2.zero;
+            content.offsetMax = Vector2.zero;
+            var grid = content.gameObject.AddComponent<GridLayoutGroup>();
+            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            grid.constraintCount = 3;
+            grid.cellSize = new Vector2(280f, 320f);
+            grid.spacing = new Vector2(16f, 16f);
+            grid.childAlignment = TextAnchor.UpperCenter;
+            var fitter = content.gameObject.AddComponent<ContentSizeFitter>();
+            fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            scroll.content = content;
+
+            RectTransform messageArea = CreateUiObject("MessageArea", safeArea);
+            messageArea.gameObject.SetActive(false);
+            var messageElement = messageArea.gameObject.AddComponent<LayoutElement>();
+            messageElement.preferredHeight = 640f;
+            messageElement.flexibleHeight = 0f;
+            var messageLayout = messageArea.gameObject.AddComponent<VerticalLayoutGroup>();
+            messageLayout.spacing = 20f;
+            messageLayout.childAlignment = TextAnchor.UpperCenter;
+            messageLayout.childControlWidth = true;
+            messageLayout.childControlHeight = true;
+            messageLayout.childForceExpandWidth = true;
+            messageLayout.childForceExpandHeight = false;
+
+            TMP_Text odds = CreateText(messageArea, "OddsText", "", 50f, FontStyles.Bold, TitleColor, TextAlignmentOptions.Center, font, true);
+            odds.richText = true;
+            var oddsElement = odds.gameObject.AddComponent<LayoutElement>();
+            oddsElement.preferredHeight = 360f;
+            oddsElement.flexibleHeight = 0f;
+
+            TMP_Text message = CreateText(messageArea, "MessageText", "", 50f, FontStyles.Normal, TitleColor, TextAlignmentOptions.Center, font, true);
+            var messageTextElement = message.gameObject.AddComponent<LayoutElement>();
+            messageTextElement.preferredHeight = 260f;
+            messageTextElement.flexibleHeight = 0f;
+
+            TMP_Text result = CreateText(messageArea, "ResultText", "", 50f, FontStyles.Normal, TitleColor, TextAlignmentOptions.Center, font, true);
+            result.richText = true;
+            var resultElement = result.gameObject.AddComponent<LayoutElement>();
+            resultElement.preferredHeight = 560f;
+            resultElement.flexibleHeight = 0f;
+            result.gameObject.SetActive(false);
+
+            TMP_Text stats = CreateText(messageArea, "StatsText", "", 48f, FontStyles.Normal, new Color32(0xA8, 0xB3, 0xC7, 0xFF), TextAlignmentOptions.Center, font, true);
+            var statsElement = stats.gameObject.AddComponent<LayoutElement>();
+            statsElement.preferredHeight = 260f;
+            statsElement.flexibleHeight = 0f;
+
+            RectTransform actionArea = CreateUiObject("ActionArea", safeArea);
+            actionArea.gameObject.SetActive(false);
+            var actionElement = actionArea.gameObject.AddComponent<LayoutElement>();
+            actionElement.preferredHeight = 292f;
+            actionElement.flexibleHeight = 0f;
+            var actionLayout = actionArea.gameObject.AddComponent<VerticalLayoutGroup>();
+            actionLayout.spacing = 20f;
+            actionLayout.childAlignment = TextAnchor.MiddleCenter;
+            actionLayout.childControlWidth = true;
+            actionLayout.childControlHeight = true;
+            actionLayout.childForceExpandWidth = true;
+            actionLayout.childForceExpandHeight = false;
+
+            RectTransform choiceRow = CreateUiObject("ChoiceRow", actionArea);
             var choiceElement = choiceRow.gameObject.AddComponent<LayoutElement>();
-            choiceElement.preferredHeight = 108f;
+            choiceElement.preferredHeight = 124f;
             choiceElement.flexibleHeight = 0f;
             var choiceLayout = choiceRow.gameObject.AddComponent<HorizontalLayoutGroup>();
             choiceLayout.spacing = 16f;
@@ -249,49 +439,59 @@ namespace MindParadox.EditorTools
             choiceLayout.childForceExpandWidth = true;
             choiceLayout.childForceExpandHeight = false;
             Button stay = CreateActionButton(choiceRow, "StayButton", "유지", font, sprite);
+            StyleModeChoice(stay);
             Button changeDoor = CreateActionButton(choiceRow, "SwitchButton", "변경", font, sprite);
-            choiceRow.gameObject.SetActive(false);
+            StyleModeChoice(changeDoor);
+            stay.interactable = false;
+            changeDoor.interactable = false;
 
-            TMP_Text result = CreateText(safeArea, "ResultText", "결과: 자동차", 48f, FontStyles.Bold, TitleColor, TextAlignmentOptions.Center, font, false);
-            var resultElement = result.gameObject.AddComponent<LayoutElement>();
-            resultElement.preferredHeight = 88f;
-            resultElement.flexibleHeight = 0f;
-            result.gameObject.SetActive(false);
-
-            Button replay = CreateActionButton(safeArea, "ReplayButton", "다시 하기", font, sprite);
-            replay.gameObject.SetActive(false);
-
-            RectTransform spacer = CreateUiObject("Spacer", safeArea);
-            var spacerElement = spacer.gameObject.AddComponent<LayoutElement>();
-            spacerElement.flexibleHeight = 1f;
-            spacerElement.preferredHeight = 24f;
-
-            Button menu = CreateActionButton(safeArea, "MenuButton", "메인 메뉴", font, sprite);
+            Button replay = CreateActionButton(actionArea, "ReplayButton", "다시 하기", font, sprite);
+            StyleModeChoice(replay);
+            replay.interactable = false;
 
             CreateEventSystem();
 
             var host = new GameObject("MontyHall");
-            var game = host.AddComponent<MontyHallGameUI>();
+            var game = host.AddComponent<MontyHallGameManager>();
             var serializedGame = new SerializedObject(game);
-            serializedGame.FindProperty("statusText").objectReferenceValue = status;
+            serializedGame.FindProperty("doorPrefab").objectReferenceValue = doorPrefab;
+            serializedGame.FindProperty("doorContent").objectReferenceValue = content;
+            serializedGame.FindProperty("doorGrid").objectReferenceValue = grid;
+            serializedGame.FindProperty("modePanel").objectReferenceValue = modePanel.gameObject;
+            serializedGame.FindProperty("customPanel").objectReferenceValue = customPanel.gameObject;
+            serializedGame.FindProperty("gameArea").objectReferenceValue = gameArea.gameObject;
+            serializedGame.FindProperty("messageArea").objectReferenceValue = messageArea.gameObject;
+            serializedGame.FindProperty("actionArea").objectReferenceValue = actionArea.gameObject;
+            serializedGame.FindProperty("doorSlider").objectReferenceValue = doorSlider;
+            serializedGame.FindProperty("descriptionText").objectReferenceValue = description;
+            serializedGame.FindProperty("customCountText").objectReferenceValue = customCount;
+            serializedGame.FindProperty("customOddsText").objectReferenceValue = customOdds;
+            serializedGame.FindProperty("oddsText").objectReferenceValue = odds;
+            serializedGame.FindProperty("messageText").objectReferenceValue = message;
             serializedGame.FindProperty("resultText").objectReferenceValue = result;
-            serializedGame.FindProperty("choiceRow").objectReferenceValue = choiceRow.gameObject;
+            serializedGame.FindProperty("statsText").objectReferenceValue = stats;
             serializedGame.FindProperty("stayButton").objectReferenceValue = stay;
             serializedGame.FindProperty("switchButton").objectReferenceValue = changeDoor;
             serializedGame.FindProperty("replayButton").objectReferenceValue = replay;
-            serializedGame.FindProperty("menuButton").objectReferenceValue = menu;
-            serializedGame.FindProperty("mainSceneName").stringValue = "MainScene";
-            AssignArray(serializedGame.FindProperty("doorButtons"), doors);
-            AssignArray(serializedGame.FindProperty("doorLabels"), doorLabels);
-            AssignArray(serializedGame.FindProperty("doorImages"), doorImages);
+            serializedGame.FindProperty("backButton").objectReferenceValue = back;
+            serializedGame.FindProperty("modeButton").objectReferenceValue = mode;
+            serializedGame.FindProperty("threeDoorButton").objectReferenceValue = threeDoors;
+            serializedGame.FindProperty("tenDoorButton").objectReferenceValue = tenDoors;
+            serializedGame.FindProperty("customButton").objectReferenceValue = custom;
+            serializedGame.FindProperty("customStartButton").objectReferenceValue = customStart;
+            serializedGame.FindProperty("plusButton").objectReferenceValue = plus;
+            serializedGame.FindProperty("minusButton").objectReferenceValue = minus;
             serializedGame.ApplyModifiedPropertiesWithoutUndo();
 
             Stretch(canvasObject.GetComponent<RectTransform>());
+            PuzzleExplanationSetup.AttachInActiveScene("monty-hall");
             EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene(), ScenePath);
-            FixSavedCanvasRect(ScenePath);
+            bool rewritten = FixSavedCanvasRect(ScenePath);
 
             if (!string.IsNullOrEmpty(returnPath) && returnPath != ScenePath)
                 EditorSceneManager.OpenScene(returnPath, OpenSceneMode.Single);
+            else if (rewritten)
+                EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
         }
 
         static void AssignArray(SerializedProperty property, UnityEngine.Object[] values)
@@ -322,15 +522,15 @@ namespace MindParadox.EditorTools
             AssetDatabase.SaveAssets();
         }
 
-        static void FixSavedCanvasRect(string path)
+        static bool FixSavedCanvasRect(string path)
         {
             if (!File.Exists(path))
-                return;
+                return false;
 
             string text = File.ReadAllText(path);
             const string brokenScale = "  m_LocalScale: {x: 0, y: 0, z: 0}";
             if (!text.Contains(brokenScale))
-                return;
+                return false;
 
             string newline = text.Contains("\r\n") ? "\r\n" : "\n";
             string brokenAnchor =
@@ -348,6 +548,7 @@ namespace MindParadox.EditorTools
             text = text.Replace(brokenAnchor, fixedAnchor);
             File.WriteAllText(path, text);
             AssetDatabase.ImportAsset(path);
+            return true;
         }
 
         static void AddKoreanGlyphs()
@@ -373,26 +574,30 @@ namespace MindParadox.EditorTools
 
             for (int i = 0; i < trials; i++)
             {
-                var stayRound = new MontyHallRound(random);
+                var stayRound = new MontyHallRound(3, random);
                 stayRound.Begin();
-                stayRound.ChooseDoor(i % MontyHallRound.DoorCount);
-                if (stayRound.RevealedDoor == stayRound.PlayerDoor || stayRound.RevealedDoor == stayRound.CarDoor || stayRound.RevealedDoor < 0)
-                {
-                    Debug.LogError("[Mind Paradox] 진행자가 고른 문이나 자동차 문을 열었습니다.");
+                stayRound.ChooseDoor(i % 3);
+                if (!HostLeftTwoDoors(stayRound))
                     return;
-                }
 
                 stayRound.Stay();
                 if (stayRound.Won)
                     stayWins++;
 
-                var switchRound = new MontyHallRound(random);
+                var switchRound = new MontyHallRound(3, random);
                 switchRound.Begin();
-                switchRound.ChooseDoor(i % MontyHallRound.DoorCount);
+                switchRound.ChooseDoor(i % 3);
+                bool initialWrong = switchRound.PlayerDoor != switchRound.CarDoor;
                 switchRound.Switch();
-                if (switchRound.FinalDoor == switchRound.RevealedDoor || switchRound.FinalDoor == switchRound.PlayerDoor)
+                if (switchRound.FinalDoor != switchRound.AlternateDoor || switchRound.FinalDoor == switchRound.PlayerDoor)
                 {
-                    Debug.LogError("[Mind Paradox] 변경이 공개된 문이나 처음 고른 문을 골랐습니다.");
+                    Debug.LogError("[Mind Paradox] 변경이 남은 다른 문을 고르지 않았습니다.");
+                    return;
+                }
+
+                if (switchRound.Won != initialWrong)
+                {
+                    Debug.LogError("[Mind Paradox] 처음 선택이 틀렸을 때 변경이 자동차가 아닙니다.");
                     return;
                 }
 
@@ -402,6 +607,130 @@ namespace MindParadox.EditorTools
 
             if (stayWins > trials * 0.45f || switchWins < trials * 0.55f)
                 Debug.LogError("[Mind Paradox] 3문 몬티홀 확률이 예상과 다릅니다. 유지 " + stayWins + ", 변경 " + switchWins);
+
+            CheckHost(10, 40);
+            CheckHost(100, 20);
+        }
+
+        static void CheckHost(int doorCount, int trials)
+        {
+            var random = new System.Random(doorCount);
+            for (int i = 0; i < trials; i++)
+            {
+                var round = new MontyHallRound(doorCount, random);
+                round.Begin();
+                round.ChooseDoor(i % doorCount);
+                if (!HostLeftTwoDoors(round))
+                    return;
+
+                bool initialWrong = round.PlayerDoor != round.CarDoor;
+                if (initialWrong && round.AlternateDoor != round.CarDoor)
+                {
+                    Debug.LogError("[Mind Paradox] 염소를 골랐는데 자동차 문을 남기지 않았습니다.");
+                    return;
+                }
+
+                if (!initialWrong && round.AlternateDoor == round.CarDoor)
+                {
+                    Debug.LogError("[Mind Paradox] 자동차를 골랐는데 자동차가 아닌 문을 남기지 않았습니다.");
+                    return;
+                }
+            }
+        }
+
+        static bool HostLeftTwoDoors(MontyHallRound round)
+        {
+            if (round.OpenedCount != round.DoorCount - 2 || round.IsOpened(round.PlayerDoor) || round.IsOpened(round.CarDoor) || round.AlternateDoor == round.PlayerDoor)
+            {
+                Debug.LogError("[Mind Paradox] 진행자가 문 " + round.DoorCount + "개에서 닫힌 문 두 개를 남기지 못했습니다.");
+                return false;
+            }
+
+            return true;
+        }
+
+        static MontyHallDoorUI EnsureDoorPrefab(TMP_FontAsset font, Sprite sprite)
+        {
+            var existing = AssetDatabase.LoadAssetAtPath<GameObject>(DoorPrefabPath);
+            if (existing != null)
+                return existing.GetComponent<MontyHallDoorUI>();
+
+            MontyHallDoorUI door = CreateDoor(null, "MontyHallDoor", "1", font, sprite);
+            try
+            {
+                PrefabUtility.SaveAsPrefabAsset(door.gameObject, DoorPrefabPath);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(door.gameObject);
+            }
+
+            AssetDatabase.ImportAsset(DoorPrefabPath);
+            var saved = AssetDatabase.LoadAssetAtPath<GameObject>(DoorPrefabPath);
+            return saved != null ? saved.GetComponent<MontyHallDoorUI>() : null;
+        }
+
+        static void CreateHint(Transform parent, string text, TMP_FontAsset font)
+        {
+            TMP_Text hint = CreateText(parent, "Hint", text, 50f, FontStyles.Normal, new Color32(0xA8, 0xB3, 0xC7, 0xFF), TextAlignmentOptions.Center, font, true);
+            var element = hint.gameObject.AddComponent<LayoutElement>();
+            element.preferredHeight = 160f;
+            element.flexibleHeight = 0f;
+        }
+
+        static Slider CreateDoorSlider(Transform parent)
+        {
+            var root = new GameObject("DoorSlider", typeof(RectTransform));
+            root.transform.SetParent(parent, false);
+            var element = root.AddComponent<LayoutElement>();
+            element.preferredHeight = 56f;
+            element.flexibleWidth = 1f;
+
+            var background = CreateStretch("Background", root.transform);
+            var backgroundImage = background.gameObject.AddComponent<Image>();
+            backgroundImage.color = new Color32(0x2A, 0x35, 0x48, 0xFF);
+
+            var fillArea = CreateStretch("Fill Area", root.transform);
+            fillArea.offsetMin = new Vector2(10f, 18f);
+            fillArea.offsetMax = new Vector2(-10f, -18f);
+            var fill = CreateStretch("Fill", fillArea);
+            var fillImage = fill.gameObject.AddComponent<Image>();
+            fillImage.color = ButtonColor;
+
+            var handleArea = CreateStretch("Handle Slide Area", root.transform);
+            handleArea.offsetMin = new Vector2(10f, 0f);
+            handleArea.offsetMax = new Vector2(-10f, 0f);
+            var handle = new GameObject("Handle", typeof(RectTransform));
+            handle.transform.SetParent(handleArea, false);
+            var handleRect = handle.GetComponent<RectTransform>();
+            handleRect.sizeDelta = new Vector2(36f, 36f);
+            var handleImage = handle.AddComponent<Image>();
+            handleImage.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(SpritePath);
+            handleImage.type = handleImage.sprite != null ? Image.Type.Sliced : Image.Type.Simple;
+            handleImage.color = Color.white;
+
+            var slider = root.AddComponent<Slider>();
+            slider.fillRect = fill;
+            slider.handleRect = handleRect;
+            slider.targetGraphic = handleImage;
+            slider.direction = Slider.Direction.LeftToRight;
+            slider.minValue = MontyHallRound.MinDoors;
+            slider.maxValue = MontyHallRound.MaxDoors;
+            slider.wholeNumbers = true;
+            slider.value = 10f;
+            return slider;
+        }
+
+        static MontyHallDoorUI CreateDoor(Transform parent, string name, string label, TMP_FontAsset font, Sprite sprite)
+        {
+            Button button = CreateDoorButton(parent, name, label, font, sprite, out TMP_Text caption, out Image image);
+            var door = button.gameObject.AddComponent<MontyHallDoorUI>();
+            var serialized = new SerializedObject(door);
+            serialized.FindProperty("face").objectReferenceValue = image;
+            serialized.FindProperty("label").objectReferenceValue = caption;
+            serialized.FindProperty("button").objectReferenceValue = button;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            return door;
         }
 
         static Button CreateDoorButton(Transform parent, string name, string label, TMP_FontAsset font, Sprite sprite, out TMP_Text caption, out Image image)
@@ -462,9 +791,19 @@ namespace MindParadox.EditorTools
             element.flexibleWidth = 1f;
             element.flexibleHeight = 0f;
 
-            TMP_Text caption = CreateText(buttonObject.transform, "Label", label, 42f, FontStyles.Bold, Color.white, TextAlignmentOptions.Center, font, false);
+            TMP_Text caption = CreateText(buttonObject.transform, "Label", label, 48f, FontStyles.Bold, Color.white, TextAlignmentOptions.Center, font, false);
             Stretch(caption.rectTransform);
             return button;
+        }
+
+        static void StyleModeChoice(Button button)
+        {
+            var element = button.GetComponent<LayoutElement>();
+            element.preferredHeight = 124f;
+            element.minHeight = 112f;
+            TMP_Text label = button.GetComponentInChildren<TMP_Text>();
+            label.fontSize = 48f;
+            label.enableAutoSizing = false;
         }
 
         static Camera CreateCamera()

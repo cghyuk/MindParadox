@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: CategoryData_CognitiveBias
   m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.CategoryData
   categoryId: bias
-  displayName: Bias
-  description: "판단이 치우치는 지점"
+  displayName: "\uC778\uC9C0 \uD3B8\uD5A5"
+  description: "생각이 한쪽으로 기우는 지점을 보는 문제"
   displayOrder: 4
+  puzzleCapacity: 100
   icon: {fileID: 0}
   unlockProductId: bias_pack
   isEnabled: 0

@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.PuzzleData
   puzzleId: birthday-paradox
   categoryId: probability
-  title: Birthday Paradox
-  shortDescription: "23명만 모여도 같은 생일 확률이 50%를 넘는다?"
+  title: "\uC0DD\uC77C \uC5ED\uC124"
+  shortDescription: "23\uBA85\uB9CC \uBAA8\uC5EC\uB3C4 \uAC19\uC740 \uC0DD\uC77C
+    \uD655\uB960\uC774 50%\uB97C \uB118\uB294\uB2E4?"
   displayOrder: 1
-  sceneName: BirthdayParadox
+  sceneName: BirthdayParadoxScene
   puzzleType: 
   isDefaultFree: 1
   unlockOrder: 1
@@ -26,3 +27,4 @@ MonoBehaviour:
   isEnabled: 1
   titleKey: 
   shortDescriptionKey: 
+  explanation: {fileID: 11400000, guid: 90459817c53456347a629cc275077de0, type: 2}

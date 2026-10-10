@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4171df1a1487f874683a27fab38e3590, type: 3}
+  m_Name: ExplanationData_MontyHall
+  m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.ExplanationData
+  puzzleId: monty-hall
+  explanationTitle: "\uC65C \uBB38\uC744 \uBC14\uAFB8\uB294 \uAC83\uC774 \uC720\uB9AC\uD560\uAE4C?"
+  explanationSummary: "\uBC14\uAFB8\uB294 \uCABD\uC774 \uC720\uB9AC\uD55C \uC774\uC720\uB294\n\uCC98\uC74C
+    \uC120\uD0DD\uC774 \uD2C0\uB9B4 \uD655\uB960\uC774 \uB354 \uD06C\uAE30 \uB54C\uBB38\uC785\uB2C8\uB2E4."
+  explanationBody: "\uCC98\uC74C \uC120\uD0DD\uD55C \uBB38\uC5D0 \uC790\uB3D9\uCC28\uAC00
+    \uC788\uC744 \uD655\uB960\uC740\n\uBB38\uC774 3\uAC1C\uB77C\uBA74 1/3\uC785\uB2C8\uB2E4.\n\n\uCC98\uC74C
+    \uC120\uD0DD\uC774 \uD2C0\uB838\uC744 \uD655\uB960\uC740 2/3\uC785\uB2C8\uB2E4.\n\n\uC9C4\uD589\uC790\uB294
+    \uC790\uB3D9\uCC28 \uC704\uCE58\uB97C \uC54C\uACE0 \uC788\uACE0\n\uBC18\uB4DC\uC2DC
+    \uC5FC\uC18C\uAC00 \uC788\uB294 \uBB38\uB9CC \uC5FD\uB2C8\uB2E4.\n\n\uB530\uB77C\uC11C
+    \uCC98\uC74C \uC120\uD0DD\uC774 \uD2C0\uB838\uB358 2/3\uC758 \uACBD\uC6B0,\n\uB0A8\uC740
+    \uBB38\uC73C\uB85C \uBC14\uAFB8\uBA74 \uC790\uB3D9\uCC28\uB97C \uC5BB\uAC8C \uB429\uB2C8\uB2E4."
+  explanationFormula: "3 Doors\nStay 33.3%\nSwitch 66.7%\n\nN\uAC1C\uC758 \uBB38\nStay
+    = 1 / N\nSwitch = (N - 1) / N\n\n10 Doors\nStay 10%\nSwitch 90%\n\n100 Doors\nStay
+    1%\nSwitch 99%"
+  explanationKey: explanation.monty-hall
+  titleKey: explanation.monty-hall.title
+  summaryKey: explanation.monty-hall.summary
+  bodyKey: explanation.monty-hall.body
+  formulaKey: explanation.monty-hall.formula

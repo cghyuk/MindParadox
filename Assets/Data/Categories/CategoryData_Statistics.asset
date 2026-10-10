@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: CategoryData_Statistics
   m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.CategoryData
   categoryId: statistics
-  displayName: Statistics
-  description: "통계가 드러내는 착시"
+  displayName: "\uD1B5\uACC4"
+  description: "통계가 어떻게 잘못 해석될 수 있는지 알아보는 문제"
   displayOrder: 3
+  puzzleCapacity: 100
   icon: {fileID: 0}
   unlockProductId: statistics_pack
   isEnabled: 0

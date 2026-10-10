@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d5f9c38e1a4f7b8c4d6e8f20315922, type: 3}
+  m_Name: PuzzleData_ThreeDoorChoice
+  m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.PuzzleData
+  puzzleId: three-door-choice
+  categoryId: probability
+  title: "\uC138 \uBB38 \uC120\uD0DD \uD655\uB960"
+  shortDescription: "\uC9C4\uD589\uC790\uAC00 \uBB38\uC744 \uC5F4\uC9C0 \uC54A\uC744 \uB54C, \uCC98\uC74C \uACE0\uB978 \uBB38\uC758 \uD655\uB960\uC740?"
+  displayOrder: 10
+  sceneName: ThreeDoorChoiceScene
+  puzzleType: 
+  isDefaultFree: 0
+  unlockOrder: 10
+  icon: {fileID: 0}
+  difficulty: 1
+  isEnabled: 0
+  titleKey: puzzle.three-door-choice.title
+  shortDescriptionKey: puzzle.three-door-choice.short
+  explanation: {fileID: 11400000, guid: 5c07b918f6da457927c8e0a1b2c3d4ef, type: 2}

@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.PuzzleData
   puzzleId: monty-hall
   categoryId: probability
-  title: Monty Hall
-  shortDescription: "문을 바꾸면 정말 확률이 올라갈까?"
+  title: "\uBAAC\uD2F0\uD640 \uBB38\uC81C"
+  shortDescription: "\uBB38\uC744 \uBC14\uAFB8\uBA74 \uC815\uB9D0 \uD655\uB960\uC774
+    \uC62C\uB77C\uAC08\uAE4C?"
   displayOrder: 0
   sceneName: MontyHallScene
   puzzleType: 
@@ -26,3 +27,4 @@ MonoBehaviour:
   isEnabled: 1
   titleKey: 
   shortDescriptionKey: 
+  explanation: {fileID: 11400000, guid: e8e6f666624292c4192d9bee344ed48e, type: 2}

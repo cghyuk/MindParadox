@@ -33,6 +33,21 @@ namespace MindParadox.Data
             return list.ToArray();
         }
 
+        public CategoryData FindCategory(string categoryId)
+        {
+            if (string.IsNullOrEmpty(categoryId) || categories == null)
+                return null;
+
+            for (int i = 0; i < categories.Length; i++)
+            {
+                CategoryData category = categories[i];
+                if (category != null && category.categoryId == categoryId)
+                    return category;
+            }
+
+            return null;
+        }
+
         public PuzzleData[] GetPuzzles(string categoryId)
         {
             var list = new List<PuzzleData>();

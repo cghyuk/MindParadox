@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4171df1a1487f874683a27fab38e3590, type: 3}
+  m_Name: ExplanationData_ThreeDoorChoice
+  m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.ExplanationData
+  puzzleId: three-door-choice
+  explanationTitle: "\uC65C \uC120\uD0DD\uD558\uC9C0 \uC54A\uC740 \uB450 \uBB38\uC758 \uD655\uB960\uC740 2/3\uC77C\uAE4C?"
+  explanationSummary: "\uCC98\uC74C \uACE0\uB978 \uD55C \uBB38\uC740 1/3\uC774\uACE0\n\uB098\uBA38\uC9C0 \uB450 \uBB38\uC744 \uBB36\uC73C\uBA74 2/3\uC785\uB2C8\uB2E4."
+  explanationBody: "\uCC98\uC74C \uC120\uD0DD\uD55C \uD55C \uBB38\uC740 1/3\uC785\uB2C8\uB2E4.\n\uC120\uD0DD\uD558\uC9C0 \uC54A\uC740 \uB450 \uBB38\uC744 \uBB36\uC73C\uBA74 2/3\uC785\uB2C8\uB2E4.\n\n\uBAAC\uD2F0\uD640\uC5D0\uC11C \uC9C4\uD589\uC790\uAC00\n\uADF8 \uB450 \uBB38 \uC911 \uC5FC\uC18C \uD558\uB098\uB97C \uC81C\uAC70\uD574\uB3C4\n\uADF8 2/3 \uD655\uB960\uC740 \uC0AC\uB77C\uC9C0\uC9C0 \uC54A\uACE0\n\uB0A8\uC740 \uD55C \uBB38\uC73C\uB85C \uC9D1\uC911\uB429\uB2C8\uB2E4."
+  explanationFormula: "\uD55C \uBB38 1/3\n\uB098\uBA38\uC9C0 \uB450 \uBB38 2/3"
+  explanationKey: explanation.three-door-choice
+  titleKey: explanation.three-door-choice.title
+  summaryKey: explanation.three-door-choice.summary
+  bodyKey: explanation.three-door-choice.body
+  formulaKey: explanation.three-door-choice.formula

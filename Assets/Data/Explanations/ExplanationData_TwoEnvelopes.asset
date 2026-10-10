@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4171df1a1487f874683a27fab38e3590, type: 3}
+  m_Name: ExplanationData_TwoEnvelopes
+  m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.ExplanationData
+  puzzleId: two-envelopes
+  explanationTitle: "\uC65C \uD56D\uC0C1 \uBC14\uAFB8\uB294 \uAC83\uC774 \uC774\uB4DD\uCC98\uB7FC \uBCF4\uC77C\uAE4C?"
+  explanationSummary: "\uB2E4\uB978 \uBD09\uD22C\uAC00 \uC808\uBC18\uC774\uAC70\uB098 \uB450 \uBC30\uC77C \uD655\uB960\uC774\n\uAC01\uAC01 1/2\uB77C\uB294 \uAC00\uC815\uC740 \uC77C\uBC18\uC801\uC73C\uB85C \uC131\uB9BD\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."
+  explanationBody: "\uD604\uC7AC \uBD09\uD22C\uC758 \uAE08\uC561\uC744 A\uB77C\uACE0 \uB450\uACE0\n\uBC18\uB300 \uBD09\uD22C\uAC00 A/2\uC77C \uD655\uB960 1/2,\n2A\uC77C \uD655\uB960 1/2\uB77C\uACE0 \uAC00\uC815\uD558\uBA74\n\uAE30\uB300\uAC12\uC774 1.25A\uCC98\uB7FC \uBCF4\uC5EC\n\uD56D\uC0C1 \uBC14\uAFB8\uB294 \uAC83\uC774 \uC720\uB9AC\uD574 \uBCF4\uC785\uB2C8\uB2E4.\n\n\uD558\uC9C0\uB9CC A\uB97C \uAD00\uCC30\uD55C \uB4A4\uC5D0\uB3C4\nA/2\uC640 2A\uAC00 \uAC01\uAC01 1/2\uC774\uB77C\uB294 \uAC00\uC815\uC740\n\uC77C\uBC18\uC801\uC73C\uB85C \uC131\uB9BD\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\n\n\uAE08\uC561\uC774 \uC5B4\uB5BB\uAC8C \uC815\uD574\uC84C\uB294\uC9C0\uC5D0 \uB300\uD55C\n\uC0AC\uC804 \uBD84\uD3EC\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4."
+  explanationFormula: "\uC0AC\uC804 \uBD84\uD3EC\uAC00 \uC788\uC5B4\uC57C\n\uAE30\uB300\uAC12\uC744 \uC815\uD560 \uC218 \uC788\uB2E4"
+  explanationKey: explanation.two-envelopes
+  titleKey: explanation.two-envelopes.title
+  summaryKey: explanation.two-envelopes.summary
+  bodyKey: explanation.two-envelopes.body
+  formulaKey: explanation.two-envelopes.formula
