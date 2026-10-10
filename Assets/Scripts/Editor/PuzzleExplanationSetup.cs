@@ -345,7 +345,7 @@ namespace MindParadox.EditorTools
             content.offsetMin = Vector2.zero;
             content.offsetMax = Vector2.zero;
             var contentLayout = content.gameObject.AddComponent<VerticalLayoutGroup>();
-            contentLayout.spacing = 28f;
+            contentLayout.spacing = 48f;
             contentLayout.padding = new RectOffset(8, 8, 8, 24);
             contentLayout.childAlignment = TextAnchor.UpperCenter;
             contentLayout.childControlWidth = true;
@@ -542,10 +542,10 @@ namespace MindParadox.EditorTools
                     "진행자는 자동차 위치를 알고 있고\n반드시 염소가 있는 문만 엽니다.\n\n" +
                     "따라서 처음 선택이 틀렸던 2/3의 경우,\n남은 문으로 바꾸면 자동차를 얻게 됩니다.",
                 Formula =
-                    "3 Doors\nStay 33.3%\nSwitch 66.7%\n\n" +
-                    "N개의 문\nStay = 1 / N\nSwitch = (N - 1) / N\n\n" +
-                    "10 Doors\nStay 10%\nSwitch 90%\n\n" +
-                    "100 Doors\nStay 1%\nSwitch 99%"
+                    "[3 Doors]\n\nSTAY\n33.3%\n\nSWITCH\n66.7%\n---\n" +
+                    "[N개의 문]\n\nStay = 1 / N\nSwitch = (N - 1) / N\n\n" +
+                    "[10 Doors]\n\nStay = 10%\nSwitch = 90%\n\n" +
+                    "[100 Doors]\n\nStay = 1%\nSwitch = 99%"
             },
             new ExplanationEntry
             {

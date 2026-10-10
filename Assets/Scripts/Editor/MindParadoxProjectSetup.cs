@@ -642,7 +642,7 @@ namespace MindParadox.EditorTools
         {
             var root = new GameObject("GameCard", typeof(RectTransform));
             var rootRect = root.GetComponent<RectTransform>();
-            rootRect.sizeDelta = new Vector2(0f, 540f);
+            rootRect.sizeDelta = new Vector2(0f, 400f);
 
             var background = root.AddComponent<Image>();
             background.sprite = sprite;
@@ -651,7 +651,7 @@ namespace MindParadox.EditorTools
             background.raycastTarget = true;
 
             var layout = root.AddComponent<VerticalLayoutGroup>();
-            layout.padding = new RectOffset(40, 40, 32, 24);
+            layout.padding = new RectOffset(40, 40, 24, 16);
             layout.spacing = 0f;
             layout.childAlignment = TextAnchor.UpperLeft;
             layout.childControlWidth = true;
@@ -660,8 +660,8 @@ namespace MindParadox.EditorTools
             layout.childForceExpandHeight = false;
 
             var element = root.AddComponent<LayoutElement>();
-            element.preferredHeight = 540f;
-            element.minHeight = 520f;
+            element.preferredHeight = 400f;
+            element.minHeight = 380f;
             element.flexibleWidth = 1f;
 
             var card = root.AddComponent<GameCardUI>();
@@ -672,14 +672,14 @@ namespace MindParadox.EditorTools
             titleElement.preferredHeight = 88f;
             titleElement.flexibleHeight = 0f;
 
-            CreateGap(root.transform, "TitleDescriptionGap", 22f);
+            CreateGap(root.transform, "TitleDescriptionGap", 8f);
 
             TMP_Text description = CreateText(root.transform, "DescriptionText", "Description", 50f, FontStyles.Normal, CardBodyColor, TextAlignmentOptions.TopLeft, font, true);
             var descriptionElement = description.gameObject.AddComponent<LayoutElement>();
-            descriptionElement.preferredHeight = 218f;
+            descriptionElement.preferredHeight = 128f;
             descriptionElement.flexibleHeight = 0f;
 
-            CreateGap(root.transform, "DescriptionButtonGap", 26f);
+            CreateGap(root.transform, "DescriptionButtonGap", 8f);
 
             Button button = CreatePlayButton(root.transform, font, sprite);
 

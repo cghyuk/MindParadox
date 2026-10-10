@@ -5,8 +5,7 @@ using UnityEngine.UI;
 namespace MindParadox.UI
 {
     /// <summary>
-    /// 퍼즐 헤더의 뒤로 / 설명 버튼을 같은 크기로 맞춘다.
-    /// 오른쪽의 모드 버튼은 건드리지 않는다.
+    /// 퍼즐 헤더를 같은 높이에 맞춘다. 왼쪽은 뒤로와 설명, 오른쪽은 모드이다.
     /// </summary>
     public class PuzzleHeaderBar : MonoBehaviour
     {
@@ -51,6 +50,27 @@ namespace MindParadox.UI
 
             Fit(back, UiText.BackLabel);
             Fit(explanation, UiText.ExplanationLabel);
+
+            Transform mode = topRow.Find("ModeButton");
+            Transform spacer = topRow.Find("HeaderSpacer");
+            if (mode != null && spacer == null)
+            {
+                var spacerObject = new GameObject("HeaderSpacer", typeof(RectTransform));
+                spacer = spacerObject.transform;
+                spacer.SetParent(topRow, false);
+                var spacerElement = spacerObject.AddComponent<LayoutElement>();
+                spacerElement.flexibleWidth = 1f;
+                spacerElement.preferredWidth = 0f;
+                spacerElement.minWidth = 0f;
+            }
+
+            if (spacer != null)
+                spacer.SetSiblingIndex(explanation != null ? 2 : 1);
+            if (mode != null)
+            {
+                mode.SetAsLastSibling();
+                FitHeight(mode);
+            }
         }
 
         static void Fit(Transform buttonTransform, string label)
@@ -85,6 +105,32 @@ namespace MindParadox.UI
             text.textWrappingMode = TextWrappingModes.NoWrap;
             text.overflowMode = TextOverflowModes.Ellipsis;
             text.margin = new Vector4(TextPadding, 0f, TextPadding, 0f);
+        }
+
+        static void FitHeight(Transform buttonTransform)
+        {
+            var element = buttonTransform.GetComponent<LayoutElement>();
+            if (element == null)
+                element = buttonTransform.gameObject.AddComponent<LayoutElement>();
+
+            element.preferredHeight = ButtonHeight;
+            element.minHeight = ButtonHeight;
+            element.flexibleHeight = 0f;
+            element.flexibleWidth = 0f;
+
+            var rect = buttonTransform as RectTransform;
+            if (rect != null)
+                rect.sizeDelta = new Vector2(rect.sizeDelta.x, ButtonHeight);
+
+            TMP_Text text = buttonTransform.GetComponentInChildren<TMP_Text>(true);
+            if (text == null)
+                return;
+
+            text.fontSize = FontSize;
+            text.enableAutoSizing = false;
+            text.alignment = TextAlignmentOptions.Center;
+            text.textWrappingMode = TextWrappingModes.NoWrap;
+            text.overflowMode = TextOverflowModes.Ellipsis;
         }
     }
 }

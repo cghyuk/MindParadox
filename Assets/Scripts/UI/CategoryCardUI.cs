@@ -45,7 +45,7 @@ namespace MindParadox.UI
 
             if (accessText != null)
             {
-                accessText.text = comingSoon ? "COMING SOON" : Label(state);
+                accessText.text = AccessBadgeText(state, comingSoon);
                 accessText.color = comingSoon || state == CategoryAccessState.Locked ? LockedLabelColor : Color.white;
             }
 
@@ -82,6 +82,21 @@ namespace MindParadox.UI
                 return "1 Puzzle";
 
             return puzzleCount + " Puzzles";
+        }
+
+        /// <summary>
+        /// 배지 문구. 지금은 FREE, COMING SOON, PARTIAL, AD, OWNED, LOCKED 를 그대로 쓴다.
+        /// 해금 수를 넘기면 PARTIAL 자리만 "4 / 10 UNLOCKED" 로 바꿀 수 있다.
+        /// </summary>
+        public static string AccessBadgeText(CategoryAccessState state, bool comingSoon, int unlockedCount = -1, int totalCount = -1)
+        {
+            if (comingSoon)
+                return "COMING SOON";
+
+            if (state == CategoryAccessState.Partial && unlockedCount >= 0 && totalCount > 0)
+                return unlockedCount + " / " + totalCount + " UNLOCKED";
+
+            return Label(state);
         }
 
         static string Label(CategoryAccessState state)

@@ -13,9 +13,6 @@ namespace MindParadox.Games.MontyHall
     public class MontyHallGameManager : MonoBehaviour
     {
         const string ProbabilityCategoryId = "probability";
-        const string ThreeDoorLesson =
-            "처음 선택이 맞을 확률은 1/3이고,\n처음 선택이 틀릴 확률은 2/3이다.\n" +
-            "진행자가 염소 문 하나를 제거하므로\n처음 선택이 틀렸던 2/3의 경우\n문을 바꾸면 자동차를 얻게 된다.";
 
         [SerializeField] MontyHallDoorUI doorPrefab;
         [SerializeField] RectTransform doorContent;
@@ -49,6 +46,11 @@ namespace MindParadox.Games.MontyHall
         readonly Dictionary<int, Tally> records = new Dictionary<int, Tally>();
         RectTransform messageContent;
         ScrollRect messageScroll;
+        TMP_Text stayOddsText;
+        TMP_Text switchOddsText;
+        GameObject probabilityArea;
+        GameObject statsArea;
+        bool playAreasSplit;
 
         MontyHallRound round;
         int doorCount = 3;
@@ -185,6 +187,12 @@ namespace MindParadox.Games.MontyHall
 
             if (messageArea != null)
                 messageArea.SetActive(playing);
+
+            if (probabilityArea != null)
+                probabilityArea.SetActive(playing);
+
+            if (statsArea != null)
+                statsArea.SetActive(playing);
 
             if (actionArea != null)
                 actionArea.SetActive(playing);
@@ -361,8 +369,14 @@ namespace MindParadox.Games.MontyHall
             if (replayButton != null)
                 replayButton.interactable = finished;
 
+            string stayBlock = At("STAY", 50) + "\n" + At(stay, 60);
+            string switchBlock = At("SWITCH", 50) + "\n" + At(change, 60);
+            if (stayOddsText != null)
+                stayOddsText.text = stayBlock;
+            if (switchOddsText != null)
+                switchOddsText.text = switchBlock;
             if (oddsText != null)
-                oddsText.text = At("STAY", 50) + "\n" + At(stay, 60) + "\n\n" + At("SWITCH", 50) + "\n" + At(change, 60);
+                oddsText.text = stayBlock + "\n\n" + switchBlock;
 
             if (messageText != null)
                 messageText.text = Message(choosing, deciding, stay, change);
@@ -374,11 +388,7 @@ namespace MindParadox.Games.MontyHall
                 {
                     string outcome = round.Won ? "성공" : "실패";
                     string detail = round.Won ? "자동차를 찾았습니다." : "염소를 선택했습니다.";
-                    resultText.text = At(outcome, 60) + "\n" + At(detail, 60) + "\n\n"
-                        + At("STAY", 50) + " " + At(stay, 60) + "\n"
-                        + At("SWITCH", 50) + " " + At(change, 60);
-                    if (doorCount == 3)
-                        resultText.text += "\n\n" + At(ThreeDoorLesson, 50);
+                    resultText.text = At(outcome, 60) + "\n" + At(detail, 50);
                 }
             }
 
@@ -417,6 +427,8 @@ namespace MindParadox.Games.MontyHall
             StylePlayButton(switchButton);
             StylePlayButton(replayButton);
             StretchPlayButtons();
+            EqualizeModeChoices();
+            SplitPlayAreas();
             EnsureMessageScroll();
         }
 
@@ -507,8 +519,8 @@ namespace MindParadox.Games.MontyHall
             LayoutElement area = messageArea.GetComponent<LayoutElement>();
             if (area != null)
             {
-                area.preferredHeight = 640f;
-                area.minHeight = 480f;
+                area.preferredHeight = 280f;
+                area.minHeight = 200f;
                 area.flexibleHeight = 0f;
             }
 
@@ -589,7 +601,191 @@ namespace MindParadox.Games.MontyHall
             if (!records.TryGetValue(doorCount, out Tally tally))
                 tally = new Tally();
 
-            return doorCount + "문\n플레이 " + tally.Plays + "\n유지 " + tally.Stay + "회, 성공 " + tally.StayWins + "\n변경 " + tally.Switch + "회, 성공 " + tally.SwitchWins;
+            return "총 플레이  " + tally.Plays
+                + "\n유지 선택  " + tally.Stay + "  /  성공  " + tally.StayWins
+                + "\n변경 선택  " + tally.Switch + "  /  성공  " + tally.SwitchWins;
+        }
+
+        void EqualizeModeChoices()
+        {
+            if (modePanel == null)
+                return;
+
+            VerticalLayoutGroup layout = modePanel.GetComponent<VerticalLayoutGroup>();
+            if (layout != null)
+                layout.spacing = 16f;
+
+            MatchChoice(threeDoorButton);
+            MatchChoice(tenDoorButton);
+            MatchChoice(customButton);
+
+            TMP_Text[] hints = modePanel.GetComponentsInChildren<TMP_Text>(true);
+            for (int i = 0; i < hints.Length; i++)
+            {
+                if (hints[i] == null || hints[i].gameObject.name != "Hint")
+                    continue;
+
+                hints[i].fontSize = 50f;
+                hints[i].enableAutoSizing = false;
+                hints[i].alignment = TextAlignmentOptions.Top;
+                hints[i].textWrappingMode = TextWrappingModes.Normal;
+                LayoutElement element = hints[i].GetComponent<LayoutElement>();
+                if (element == null)
+                    continue;
+
+                element.preferredHeight = 140f;
+                element.minHeight = 140f;
+                element.flexibleHeight = 0f;
+            }
+        }
+
+        static void MatchChoice(Button button)
+        {
+            if (button == null)
+                return;
+
+            LayoutElement element = button.GetComponent<LayoutElement>();
+            if (element != null)
+            {
+                element.preferredHeight = 124f;
+                element.minHeight = 124f;
+                element.flexibleWidth = 1f;
+                element.flexibleHeight = 0f;
+            }
+
+            TMP_Text label = button.GetComponentInChildren<TMP_Text>();
+            if (label == null)
+                return;
+
+            label.fontSize = 48f;
+            label.enableAutoSizing = false;
+        }
+
+        void SplitPlayAreas()
+        {
+            if (playAreasSplit || messageArea == null)
+                return;
+
+            playAreasSplit = true;
+            if (gameArea != null)
+                gameArea.name = "DoorArea";
+
+            Transform parent = messageArea.transform.parent;
+            if (oddsText != null)
+            {
+                probabilityArea = CreateBand(parent, "ProbabilityArea", 200f);
+                GameObject probability = probabilityArea;
+                HorizontalLayoutGroup row = probability.AddComponent<HorizontalLayoutGroup>();
+                row.spacing = 24f;
+                row.padding = new RectOffset(0, 0, 8, 8);
+                row.childAlignment = TextAnchor.UpperCenter;
+                row.childControlWidth = true;
+                row.childControlHeight = true;
+                row.childForceExpandWidth = true;
+                row.childForceExpandHeight = false;
+                stayOddsText = CreateOddsBlock(probability.transform, "StayBlock");
+                switchOddsText = CreateOddsBlock(probability.transform, "SwitchBlock");
+                oddsText.gameObject.SetActive(false);
+            }
+
+            if (statsText != null)
+            {
+                statsArea = CreateBand(parent, "StatsArea", 180f);
+                GameObject stats = statsArea;
+                VerticalLayoutGroup column = stats.AddComponent<VerticalLayoutGroup>();
+                column.childAlignment = TextAnchor.UpperCenter;
+                column.childControlWidth = true;
+                column.childControlHeight = true;
+                column.childForceExpandWidth = true;
+                column.childForceExpandHeight = false;
+                statsText.transform.SetParent(stats.transform, false);
+                LayoutElement statsElement = statsText.GetComponent<LayoutElement>();
+                if (statsElement != null)
+                {
+                    statsElement.preferredHeight = 160f;
+                    statsElement.minHeight = 140f;
+                    statsElement.flexibleHeight = 0f;
+                }
+            }
+
+            if (messageArea != null)
+            {
+                LayoutElement messageElement = messageArea.GetComponent<LayoutElement>();
+                if (messageElement != null)
+                {
+                    messageElement.preferredHeight = 280f;
+                    messageElement.minHeight = 200f;
+                    messageElement.flexibleHeight = 0f;
+                }
+            }
+
+            OrderPlayAreas(parent);
+        }
+
+        static void OrderPlayAreas(Transform parent)
+        {
+            if (parent == null)
+                return;
+
+            string[] names =
+            {
+                "Header",
+                "ModePanel",
+                "DoorArea",
+                "ProbabilityArea",
+                "MessageArea",
+                "StatsArea",
+                "ActionArea"
+            };
+
+            int index = 0;
+            for (int i = 0; i < names.Length; i++)
+            {
+                Transform child = parent.Find(names[i]);
+                if (child == null)
+                    continue;
+
+                child.SetSiblingIndex(index);
+                index++;
+            }
+        }
+
+        static GameObject CreateBand(Transform parent, string bandName, float height)
+        {
+            var band = new GameObject(bandName, typeof(RectTransform));
+            band.transform.SetParent(parent, false);
+            LayoutElement element = band.AddComponent<LayoutElement>();
+            element.preferredHeight = height;
+            element.minHeight = height - 20f;
+            element.flexibleHeight = 0f;
+            element.flexibleWidth = 1f;
+            return band;
+        }
+
+        TMP_Text CreateOddsBlock(Transform parent, string blockName)
+        {
+            var block = new GameObject(blockName, typeof(RectTransform));
+            block.transform.SetParent(parent, false);
+            TMP_Text label = block.AddComponent<TextMeshProUGUI>();
+            if (oddsText != null)
+            {
+                label.font = oddsText.font;
+                label.color = oddsText.color;
+            }
+
+            label.fontSize = 50f;
+            label.enableAutoSizing = false;
+            label.richText = true;
+            label.alignment = TextAlignmentOptions.Center;
+            label.textWrappingMode = TextWrappingModes.Normal;
+            label.overflowMode = TextOverflowModes.Overflow;
+            label.raycastTarget = false;
+            LayoutElement element = block.AddComponent<LayoutElement>();
+            element.preferredHeight = 160f;
+            element.minHeight = 140f;
+            element.flexibleWidth = 1f;
+            element.flexibleHeight = 0f;
+            return label;
         }
 
         MontyHallDoorUI.View ViewFor(int index, bool choosing, bool deciding, bool finished)

@@ -23,9 +23,9 @@ MonoBehaviour:
     \uC5FC\uC18C\uAC00 \uC788\uB294 \uBB38\uB9CC \uC5FD\uB2C8\uB2E4.\n\n\uB530\uB77C\uC11C
     \uCC98\uC74C \uC120\uD0DD\uC774 \uD2C0\uB838\uB358 2/3\uC758 \uACBD\uC6B0,\n\uB0A8\uC740
     \uBB38\uC73C\uB85C \uBC14\uAFB8\uBA74 \uC790\uB3D9\uCC28\uB97C \uC5BB\uAC8C \uB429\uB2C8\uB2E4."
-  explanationFormula: "3 Doors\nStay 33.3%\nSwitch 66.7%\n\nN\uAC1C\uC758 \uBB38\nStay
-    = 1 / N\nSwitch = (N - 1) / N\n\n10 Doors\nStay 10%\nSwitch 90%\n\n100 Doors\nStay
-    1%\nSwitch 99%"
+  explanationFormula: "[3 Doors]\n\nSTAY\n33.3%\n\nSWITCH\n66.7%\n---\n[N\uAC1C\uC758
+    \uBB38]\n\nStay = 1 / N\nSwitch = (N - 1) / N\n\n[10 Doors]\n\nStay = 10%\nSwitch
+    = 90%\n\n[100 Doors]\n\nStay = 1%\nSwitch = 99%"
   explanationKey: explanation.monty-hall
   titleKey: explanation.monty-hall.title
   summaryKey: explanation.monty-hall.summary

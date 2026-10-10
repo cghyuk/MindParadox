@@ -10,8 +10,13 @@ namespace MindParadox.UI
     /// </summary>
     public class GameCardUI : MonoBehaviour
     {
+        const float CardHeight = 400f;
+        const float DescriptionHeight = 128f;
+        const float GapHeight = 8f;
+
         [SerializeField] TMP_Text titleText;
         [SerializeField] TMP_Text descriptionText;
+        [SerializeField] TMP_Text statusText;
         [SerializeField] Button playButton;
         [SerializeField] Image iconImage;
 
@@ -22,8 +27,22 @@ namespace MindParadox.UI
 
         void Awake()
         {
+            Tighten();
             if (playButton != null)
                 playButton.onClick.AddListener(OnPlayClicked);
+        }
+
+        public void SetStatus(string status)
+        {
+            if (statusText == null)
+                return;
+
+            bool show = !string.IsNullOrEmpty(status);
+            statusText.gameObject.SetActive(show);
+            statusText.text = show ? status : "";
+            LayoutElement element = statusText.GetComponent<LayoutElement>();
+            if (element != null)
+                element.preferredHeight = show ? 56f : 0f;
         }
 
         public void Setup(string title, string description, string logMessage, string sceneName = "", Sprite icon = null)
@@ -58,6 +77,91 @@ namespace MindParadox.UI
             }
 
             SceneManager.LoadScene(targetSceneName);
+        }
+
+        void Tighten()
+        {
+            LayoutElement card = GetComponent<LayoutElement>();
+            if (card != null)
+            {
+                card.preferredHeight = CardHeight;
+                card.minHeight = 380f;
+            }
+
+            RectTransform rect = transform as RectTransform;
+            if (rect != null)
+                rect.sizeDelta = new Vector2(rect.sizeDelta.x, CardHeight);
+
+            VerticalLayoutGroup layout = GetComponent<VerticalLayoutGroup>();
+            if (layout != null)
+                layout.padding = new RectOffset(40, 40, 24, 16);
+
+            SetHeight(descriptionText, DescriptionHeight);
+            if (descriptionText != null)
+            {
+                descriptionText.fontSize = 50f;
+                descriptionText.enableAutoSizing = false;
+                descriptionText.textWrappingMode = TextWrappingModes.Normal;
+                descriptionText.overflowMode = TextOverflowModes.Ellipsis;
+            }
+
+            SetGap("TitleDescriptionGap");
+            SetGap("DescriptionButtonGap");
+            EnsureStatus();
+        }
+
+        void EnsureStatus()
+        {
+            if (statusText != null || descriptionText == null)
+                return;
+
+            var statusObject = new GameObject("StatusText", typeof(RectTransform));
+            statusObject.transform.SetParent(transform, false);
+            statusObject.transform.SetSiblingIndex(descriptionText.transform.GetSiblingIndex() + 1);
+            statusText = statusObject.AddComponent<TextMeshProUGUI>();
+            if (descriptionText.font != null)
+                statusText.font = descriptionText.font;
+            statusText.fontSize = 48f;
+            statusText.enableAutoSizing = false;
+            statusText.fontStyle = FontStyles.Bold;
+            statusText.alignment = TextAlignmentOptions.MidlineLeft;
+            statusText.color = descriptionText.color;
+            statusText.textWrappingMode = TextWrappingModes.NoWrap;
+            statusText.overflowMode = TextOverflowModes.Ellipsis;
+            statusText.raycastTarget = false;
+            var element = statusObject.AddComponent<LayoutElement>();
+            element.preferredHeight = 0f;
+            element.minHeight = 0f;
+            element.flexibleHeight = 0f;
+            statusObject.SetActive(false);
+        }
+
+        static void SetHeight(TMP_Text text, float height)
+        {
+            if (text == null)
+                return;
+
+            LayoutElement element = text.GetComponent<LayoutElement>();
+            if (element == null)
+                return;
+
+            element.preferredHeight = height;
+            element.minHeight = height;
+            element.flexibleHeight = 0f;
+        }
+
+        void SetGap(string gapName)
+        {
+            Transform gap = transform.Find(gapName);
+            if (gap == null)
+                return;
+
+            LayoutElement element = gap.GetComponent<LayoutElement>();
+            if (element == null)
+                return;
+
+            element.preferredHeight = GapHeight;
+            element.minHeight = GapHeight;
         }
     }
 }

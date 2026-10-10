@@ -672,9 +672,10 @@ namespace MindParadox.EditorTools
 
         static void CreateHint(Transform parent, string text, TMP_FontAsset font)
         {
-            TMP_Text hint = CreateText(parent, "Hint", text, 50f, FontStyles.Normal, new Color32(0xA8, 0xB3, 0xC7, 0xFF), TextAlignmentOptions.Center, font, true);
+            TMP_Text hint = CreateText(parent, "Hint", text, 50f, FontStyles.Normal, new Color32(0xA8, 0xB3, 0xC7, 0xFF), TextAlignmentOptions.Top, font, true);
             var element = hint.gameObject.AddComponent<LayoutElement>();
-            element.preferredHeight = 160f;
+            element.preferredHeight = 140f;
+            element.minHeight = 140f;
             element.flexibleHeight = 0f;
         }
 
@@ -800,7 +801,7 @@ namespace MindParadox.EditorTools
         {
             var element = button.GetComponent<LayoutElement>();
             element.preferredHeight = 124f;
-            element.minHeight = 112f;
+            element.minHeight = 124f;
             TMP_Text label = button.GetComponentInChildren<TMP_Text>();
             label.fontSize = 48f;
             label.enableAutoSizing = false;
