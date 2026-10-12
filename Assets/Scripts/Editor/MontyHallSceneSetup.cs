@@ -558,11 +558,7 @@ namespace MindParadox.EditorTools
                 return;
 
             const string glyphs = "문하나를고르세요자동차는세중에도있습니다번에서염소가나왔습니다처음고른유지할까요바꿀까요결과다시하기메인메뉴선택바꿨습니다다른";
-            korean.TryAddCharacters(glyphs, out string missing);
-            if (!string.IsNullOrEmpty(missing))
-                Debug.LogWarning("[Mind Paradox] 몬티홀 안내 중 폰트에 없는 문자: " + missing);
-
-            EditorUtility.SetDirty(korean);
+            PuzzleExplanationSetup.AddMissingGlyphs(korean, glyphs, "몬티홀 안내 중 폰트에 없는 문자: ");
         }
 
         static void ValidateRules()

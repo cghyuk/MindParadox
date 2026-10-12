@@ -10,9 +10,9 @@ namespace MindParadox.UI
     /// </summary>
     public class GameCardUI : MonoBehaviour
     {
-        const float CardHeight = 400f;
-        const float DescriptionHeight = 128f;
-        const float GapHeight = 8f;
+        const float CardHeight = 464f;
+        const float TitleHeight = 144f;
+        const float DescriptionHeight = 176f;
 
         [SerializeField] TMP_Text titleText;
         [SerializeField] TMP_Text descriptionText;
@@ -56,11 +56,28 @@ namespace MindParadox.UI
             playLogMessage = logMessage;
             targetSceneName = sceneName;
 
-            if (icon != null && iconImage != null)
+            ApplyIcon(icon);
+            ApplyCardHeight();
+        }
+
+        void ApplyIcon(Sprite icon)
+        {
+            if (iconImage == null)
+                return;
+
+            bool show = icon != null;
+            if (show)
             {
                 iconImage.sprite = icon;
-                iconImage.gameObject.SetActive(true);
+                iconImage.type = Image.Type.Simple;
+                iconImage.preserveAspect = true;
+                iconImage.color = Color.white;
             }
+
+            iconImage.gameObject.SetActive(show);
+            Transform row = iconImage.transform.parent;
+            if (row != null && row != transform && row.name == "IconRow")
+                row.gameObject.SetActive(show);
         }
 
         public void OnPlayClicked()
@@ -81,21 +98,29 @@ namespace MindParadox.UI
 
         void Tighten()
         {
-            LayoutElement card = GetComponent<LayoutElement>();
-            if (card != null)
-            {
-                card.preferredHeight = CardHeight;
-                card.minHeight = 380f;
-            }
-
-            RectTransform rect = transform as RectTransform;
-            if (rect != null)
-                rect.sizeDelta = new Vector2(rect.sizeDelta.x, CardHeight);
+            ApplyCardHeight();
 
             VerticalLayoutGroup layout = GetComponent<VerticalLayoutGroup>();
             if (layout != null)
-                layout.padding = new RectOffset(40, 40, 24, 16);
+                layout.enabled = false;
 
+            Transform content = transform.Find("ContentArea");
+            if (content != null)
+            {
+                VerticalLayoutGroup contentLayout = content.GetComponent<VerticalLayoutGroup>();
+                if (contentLayout != null)
+                    contentLayout.enabled = true;
+            }
+
+            if (titleText != null)
+            {
+                titleText.fontSize = 60f;
+                titleText.enableAutoSizing = false;
+                titleText.textWrappingMode = TextWrappingModes.Normal;
+                titleText.overflowMode = TextOverflowModes.Ellipsis;
+            }
+
+            SetHeight(titleText, TitleHeight);
             SetHeight(descriptionText, DescriptionHeight);
             if (descriptionText != null)
             {
@@ -105,9 +130,25 @@ namespace MindParadox.UI
                 descriptionText.overflowMode = TextOverflowModes.Ellipsis;
             }
 
-            SetGap("TitleDescriptionGap");
-            SetGap("DescriptionButtonGap");
+            IgnoreGap("TitleDescriptionGap");
+            IgnoreGap("DescriptionButtonGap");
             EnsureStatus();
+        }
+
+        void ApplyCardHeight()
+        {
+            float height = CardHeight;
+
+            LayoutElement card = GetComponent<LayoutElement>();
+            if (card != null)
+            {
+                card.preferredHeight = height;
+                card.minHeight = height - 20f;
+            }
+
+            RectTransform rect = transform as RectTransform;
+            if (rect != null)
+                rect.sizeDelta = new Vector2(rect.sizeDelta.x, height);
         }
 
         void EnsureStatus()
@@ -145,23 +186,24 @@ namespace MindParadox.UI
             if (element == null)
                 return;
 
+            element.minWidth = 0f;
+            element.flexibleWidth = 1f;
+            element.layoutPriority = 2;
             element.preferredHeight = height;
             element.minHeight = height;
             element.flexibleHeight = 0f;
         }
 
-        void SetGap(string gapName)
+        void IgnoreGap(string gapName)
         {
             Transform gap = transform.Find(gapName);
             if (gap == null)
                 return;
 
             LayoutElement element = gap.GetComponent<LayoutElement>();
-            if (element == null)
-                return;
-
-            element.preferredHeight = GapHeight;
-            element.minHeight = GapHeight;
+            if (element != null)
+                element.ignoreLayout = true;
+            gap.gameObject.SetActive(false);
         }
     }
 }

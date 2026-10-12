@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.CategoryData
   categoryId: logic
   displayName: "\uB17C\uB9AC"
-  description: "논리적으로 맞아 보이지만 예상 밖의 답이 나오는 문제"
+  description: "\uB17C\uB9AC\uC801\uC73C\uB85C \uB9DE\uC544 \uBCF4\uC774\uC9C0\uB9CC
+    \uC608\uC0C1 \uBC16\uC758 \uB2F5\uC774 \uB098\uC624\uB294 \uBB38\uC81C"
   displayOrder: 1
   puzzleCapacity: 100
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 92a1b8b01f7b8f6408d713000b3aece1, type: 3}
   unlockProductId: logic_pack
   isEnabled: 0
   displayNameKey: 

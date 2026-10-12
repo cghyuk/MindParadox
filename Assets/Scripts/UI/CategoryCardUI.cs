@@ -12,19 +12,18 @@ namespace MindParadox.UI
     /// </summary>
     public class CategoryCardUI : MonoBehaviour
     {
-        static readonly Color FreeColor = new Color32(0x2B, 0x62, 0xE3, 0xFF);
-        static readonly Color PartialColor = new Color32(0x3E, 0x78, 0xF0, 0xFF);
-        static readonly Color AdColor = new Color32(0x1E, 0x4C, 0xC0, 0xFF);
-        static readonly Color OwnedColor = new Color32(0x15, 0x20, 0x33, 0xFF);
-        static readonly Color LockedColor = new Color32(0x9A, 0xA4, 0xB5, 0xFF);
-        static readonly Color LockedLabelColor = new Color32(0x15, 0x20, 0x33, 0xFF);
-
         [SerializeField] TMP_Text titleText;
         [SerializeField] TMP_Text descriptionText;
         [SerializeField] TMP_Text progressText;
         [SerializeField] TMP_Text accessText;
         [SerializeField] Image iconImage;
         [SerializeField] Image accessBadge;
+        [SerializeField] Image backgroundImage;
+        [SerializeField] Image arrowImage;
+        [SerializeField] Sprite activeBackground;
+        [SerializeField] Sprite inactiveBackground;
+        [SerializeField] Sprite activeBadgeSprite;
+        [SerializeField] Sprite inactiveBadgeSprite;
         [SerializeField] Button button;
 
         public void Bind(CategoryData category, int puzzleCount, CategoryAccessState state, Action onClick, int completedCount = -1)
@@ -43,21 +42,47 @@ namespace MindParadox.UI
             if (progressText != null)
                 progressText.text = FormatProgress(puzzleCount, completedCount);
 
+            bool muted = comingSoon || state == CategoryAccessState.Locked;
+
             if (accessText != null)
             {
                 accessText.text = AccessBadgeText(state, comingSoon);
-                accessText.color = comingSoon || state == CategoryAccessState.Locked ? LockedLabelColor : Color.white;
+                accessText.color = Color.white;
             }
 
             if (accessBadge != null)
-                accessBadge.color = comingSoon ? LockedColor : BadgeColor(state);
+            {
+                Sprite badgeSprite = muted ? inactiveBadgeSprite : activeBadgeSprite;
+                if (badgeSprite != null)
+                    accessBadge.sprite = badgeSprite;
+                accessBadge.color = Color.white;
+            }
+
+            if (backgroundImage != null)
+            {
+                Sprite panel = muted || !category.isEnabled ? inactiveBackground : activeBackground;
+                if (panel != null)
+                    backgroundImage.sprite = panel;
+                backgroundImage.color = Color.white;
+            }
 
             if (iconImage != null)
             {
                 bool showIcon = category.icon != null;
                 iconImage.gameObject.SetActive(showIcon);
                 if (showIcon)
+                {
                     iconImage.sprite = category.icon;
+                    iconImage.color = Color.white;
+                    iconImage.preserveAspect = true;
+                }
+            }
+
+            if (arrowImage != null)
+            {
+                Color arrowColor = arrowImage.color;
+                arrowColor.a = muted || !category.isEnabled ? 0.35f : 1f;
+                arrowImage.color = arrowColor;
             }
 
             if (button == null)
@@ -116,21 +141,5 @@ namespace MindParadox.UI
             }
         }
 
-        static Color BadgeColor(CategoryAccessState state)
-        {
-            switch (state)
-            {
-                case CategoryAccessState.Free:
-                    return FreeColor;
-                case CategoryAccessState.Partial:
-                    return PartialColor;
-                case CategoryAccessState.AdAvailable:
-                    return AdColor;
-                case CategoryAccessState.Purchased:
-                    return OwnedColor;
-                default:
-                    return LockedColor;
-            }
-        }
     }
 }

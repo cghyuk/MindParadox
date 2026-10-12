@@ -837,7 +837,7 @@ namespace MindParadox.EditorTools
             content.sizeDelta = new Vector2(0f, 0f);
 
             var contentLayout = content.gameObject.AddComponent<VerticalLayoutGroup>();
-            contentLayout.padding = new RectOffset(48, 48, 8, 32);
+            contentLayout.padding = new RectOffset(27, 27, 8, 32);
             contentLayout.spacing = 24f;
             contentLayout.childAlignment = TextAnchor.UpperCenter;
             contentLayout.childControlWidth = true;

@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.CategoryData
   categoryId: bias
   displayName: "\uC778\uC9C0 \uD3B8\uD5A5"
-  description: "생각이 한쪽으로 기우는 지점을 보는 문제"
+  description: "\uC0DD\uAC01\uC774 \uD55C\uCABD\uC73C\uB85C \uAE30\uC6B0\uB294 \uC9C0\uC810\uC744
+    \uBCF4\uB294 \uBB38\uC81C"
   displayOrder: 4
   puzzleCapacity: 100
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: bc2161a21b831844597e5d74debc7182, type: 3}
   unlockProductId: bias_pack
   isEnabled: 0
   displayNameKey: 

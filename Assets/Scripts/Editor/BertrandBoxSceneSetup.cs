@@ -393,11 +393,7 @@ namespace MindParadox.EditorTools
                 return;
 
             const string glyphs = "상자개가있습니다금화은화나왔다고가정합니다남은동전도일확률은하나를고르세요왔습니다관찰한경우가아니므로다시뽑을수있습니다정답오답나올수있는경우는세가지입니다상자의첫번째두번째가지실험기록했습니다뒤로직접회";
-            korean.TryAddCharacters(glyphs, out string missing);
-            if (!string.IsNullOrEmpty(missing))
-                Debug.LogWarning("[Mind Paradox] 베르트랑 상자 안내 중 폰트에 없는 문자: " + missing);
-
-            EditorUtility.SetDirty(korean);
+            PuzzleExplanationSetup.AddMissingGlyphs(korean, glyphs, "베르트랑 상자 안내 중 폰트에 없는 문자: ");
         }
 
         static void ValidateRules()

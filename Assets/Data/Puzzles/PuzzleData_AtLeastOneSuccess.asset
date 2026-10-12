@@ -15,13 +15,14 @@ MonoBehaviour:
   puzzleId: at-least-one-success
   categoryId: probability
   title: "\uC801\uC5B4\uB3C4 \uD558\uB098\uC758 \uC131\uACF5"
-  shortDescription: "\uC131\uACF5 \uD655\uB960 30%\uC778 \uC2DC\uB3C4\uB97C 3\uBC88 \uD558\uBA74, \uC801\uC5B4\uB3C4 \uD55C \uBC88\uC758 \uD655\uB960\uC740?"
+  shortDescription: "\uC131\uACF5 \uD655\uB960 30%\uC778 \uC2DC\uB3C4\uB97C 3\uBC88
+    \uD558\uBA74, \uC801\uC5B4\uB3C4 \uD55C \uBC88\uC758 \uD655\uB960\uC740?"
   displayOrder: 10
   sceneName: AtLeastOneSuccessScene
   puzzleType: Probability
   isDefaultFree: 0
   unlockOrder: 10
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: c7db7d7e5eb734542bf7bab71251875b, type: 3}
   difficulty: 0
   isEnabled: 1
   titleKey: puzzle.at-least-one-success.title

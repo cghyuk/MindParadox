@@ -431,11 +431,7 @@ namespace MindParadox.EditorTools
                 return;
 
             const string glyphs = "뒤로생일실험기록초기화같은있음없음명이있으면서로비교되는사람쌍은쌍입니다그래서생각보다적은인원에서도나올확률이빠르게높아집니다회";
-            korean.TryAddCharacters(glyphs, out string missing);
-            if (!string.IsNullOrEmpty(missing))
-                Debug.LogWarning("[Mind Paradox] 생일 문제 안내 중 폰트에 없는 문자: " + missing);
-
-            EditorUtility.SetDirty(korean);
+            PuzzleExplanationSetup.AddMissingGlyphs(korean, glyphs, "생일 문제 안내 중 폰트에 없는 문자: ");
         }
 
         static void ValidateRules()

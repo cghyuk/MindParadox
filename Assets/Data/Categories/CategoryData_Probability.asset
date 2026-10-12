@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.CategoryData
   categoryId: probability
   displayName: "\uD655\uB960"
-  description: "확률과 선택이 직관을 어떻게 속이는지 알아보세요."
+  description: "\uD655\uB960\uACFC \uC120\uD0DD\uC774 \uC9C1\uAD00\uC744 \uC5B4\uB5BB\uAC8C
+    \uC18D\uC774\uB294\uC9C0 \uC54C\uC544\uBCF4\uC138\uC694."
   displayOrder: 0
   puzzleCapacity: 100
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: c9612ae765c06ba4c9a4c470185934c2, type: 3}
   unlockProductId: probability_pack
   isEnabled: 1
   displayNameKey: 

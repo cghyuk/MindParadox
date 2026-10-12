@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.CategoryData
   categoryId: math
   displayName: "\uC218\uD559 \uC5ED\uC124"
-  description: "수학적 직관을 뒤집는 문제"
+  description: "\uC218\uD559\uC801 \uC9C1\uAD00\uC744 \uB4A4\uC9D1\uB294 \uBB38\uC81C"
   displayOrder: 2
   puzzleCapacity: 100
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 75b106a27e7d8f249af4d1740b9372cf, type: 3}
   unlockProductId: math_pack
   isEnabled: 0
   displayNameKey: 

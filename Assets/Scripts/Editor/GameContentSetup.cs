@@ -503,12 +503,17 @@ namespace MindParadox.EditorTools
         {
             var root = new GameObject("CategoryCard", typeof(RectTransform));
             var rootRect = root.GetComponent<RectTransform>();
-            rootRect.sizeDelta = new Vector2(984f, 456f);
+            rootRect.sizeDelta = new Vector2(1026f, 440f);
 
+            Sprite panelOn = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/_MindParadox/UIs/panel_on.png");
+            Sprite panelOff = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/_MindParadox/UIs/panel_off.png");
+            Sprite badgeOn = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/_MindParadox/UIs/btn_on.png");
+            Sprite badgeOff = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/_MindParadox/UIs/btn_off.png");
+            Sprite arrowSprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/_MindParadox/UIs/icon_arrow.png");
             var image = root.AddComponent<Image>();
-            image.sprite = sprite;
-            image.type = sprite != null ? Image.Type.Sliced : Image.Type.Simple;
-            image.color = CardColor;
+            image.sprite = panelOn != null ? panelOn : sprite;
+            image.type = image.sprite != null ? Image.Type.Sliced : Image.Type.Simple;
+            image.color = Color.white;
 
             var button = root.AddComponent<Button>();
             button.targetGraphic = image;
@@ -522,54 +527,77 @@ namespace MindParadox.EditorTools
             colors.fadeDuration = 0.08f;
             button.colors = colors;
 
-            var layout = root.AddComponent<VerticalLayoutGroup>();
-            layout.padding = new RectOffset(40, 40, 36, 28);
-            layout.spacing = 14f;
-            layout.childAlignment = TextAnchor.UpperLeft;
-            layout.childControlWidth = true;
-            layout.childControlHeight = true;
-            layout.childForceExpandWidth = false;
-            layout.childForceExpandHeight = false;
-
             var element = root.AddComponent<LayoutElement>();
-            element.preferredHeight = 456f;
-            element.minHeight = 440f;
+            element.preferredHeight = 440f;
+            element.minHeight = 420f;
             element.flexibleHeight = 0f;
             element.flexibleWidth = 1f;
 
-            Image icon = CreateIcon(root.transform);
-            TMP_Text title = CreateText(root.transform, "TitleText", "Category", 60f, FontStyles.Bold, CardTitleColor, TextAlignmentOptions.MidlineLeft, font, false);
+            RectTransform iconArea = CreateUiObject("IconArea", root.transform);
+            Place(iconArea, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(28f, 128f), new Vector2(208f, -24f));
+            Image icon = CreateIcon(iconArea);
+
+            RectTransform content = CreateUiObject("ContentArea", root.transform);
+            Place(content, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(220f, 128f), new Vector2(-76f, -20f));
+            var contentLayout = content.gameObject.AddComponent<VerticalLayoutGroup>();
+            contentLayout.padding = new RectOffset(0, 8, 8, 8);
+            contentLayout.spacing = 8f;
+            contentLayout.childAlignment = TextAnchor.UpperLeft;
+            contentLayout.childControlWidth = true;
+            contentLayout.childControlHeight = true;
+            contentLayout.childForceExpandWidth = true;
+            contentLayout.childForceExpandHeight = false;
+
+            TMP_Text title = CreateText(content, "TitleText", "Category", 60f, FontStyles.Bold, Color.white, TextAlignmentOptions.MidlineLeft, font, false);
             var titleElement = title.gameObject.AddComponent<LayoutElement>();
-            titleElement.preferredHeight = 88f;
+            titleElement.preferredHeight = 72f;
+            titleElement.minHeight = 72f;
             titleElement.flexibleWidth = 1f;
             titleElement.flexibleHeight = 0f;
 
-            TMP_Text description = CreateText(root.transform, "DescriptionText", "Description", 50f, FontStyles.Normal, CardBodyColor, TextAlignmentOptions.TopLeft, font, true);
+            TMP_Text description = CreateText(content, "DescriptionText", "Description", 50f, FontStyles.Normal, Color.white, TextAlignmentOptions.TopLeft, font, true);
             var descriptionElement = description.gameObject.AddComponent<LayoutElement>();
-            descriptionElement.preferredHeight = 188f;
+            descriptionElement.preferredHeight = 156f;
+            descriptionElement.minHeight = 100f;
             descriptionElement.flexibleWidth = 1f;
             descriptionElement.flexibleHeight = 0f;
 
-            RectTransform info = CreateUiObject("InfoRow", root.transform);
-            var infoElement = info.gameObject.AddComponent<LayoutElement>();
-            infoElement.preferredHeight = 80f;
-            infoElement.flexibleWidth = 1f;
-            infoElement.flexibleHeight = 0f;
-            var infoLayout = info.gameObject.AddComponent<HorizontalLayoutGroup>();
-            infoLayout.spacing = 16f;
-            infoLayout.childAlignment = TextAnchor.MiddleLeft;
-            infoLayout.childControlWidth = true;
-            infoLayout.childControlHeight = true;
-            infoLayout.childForceExpandWidth = false;
-            infoLayout.childForceExpandHeight = false;
+            RectTransform arrow = CreateUiObject("ArrowImage", root.transform);
+            arrow.anchorMin = new Vector2(1f, 0.5f);
+            arrow.anchorMax = new Vector2(1f, 0.5f);
+            arrow.pivot = new Vector2(0.5f, 0.5f);
+            arrow.sizeDelta = new Vector2(28f, 48f);
+            arrow.anchoredPosition = new Vector2(-42f, 54f);
+            var arrowImage = arrow.gameObject.AddComponent<Image>();
+            arrowImage.sprite = arrowSprite;
+            arrowImage.color = Color.white;
+            arrowImage.preserveAspect = true;
+            arrowImage.raycastTarget = false;
 
-            TMP_Text progress = CreateText(info, "ProgressText", "0 / 100", 48f, FontStyles.Normal, CardBodyColor, TextAlignmentOptions.MidlineLeft, font, false);
+            RectTransform dividerRect = CreateUiObject("Divider", root.transform);
+            Place(dividerRect, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(40f, 112f), new Vector2(-40f, 114f));
+            var divider = dividerRect.gameObject.AddComponent<Image>();
+            divider.color = new Color(1f, 1f, 1f, 0.28f);
+            divider.raycastTarget = false;
+
+            RectTransform bottom = CreateUiObject("BottomArea", root.transform);
+            Place(bottom, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(36f, 16f), new Vector2(-36f, 100f));
+            var bottomLayout = bottom.gameObject.AddComponent<HorizontalLayoutGroup>();
+            bottomLayout.padding = new RectOffset(4, 0, 0, 0);
+            bottomLayout.spacing = 16f;
+            bottomLayout.childAlignment = TextAnchor.MiddleLeft;
+            bottomLayout.childControlWidth = true;
+            bottomLayout.childControlHeight = true;
+            bottomLayout.childForceExpandWidth = false;
+            bottomLayout.childForceExpandHeight = false;
+
+            TMP_Text progress = CreateText(bottom, "ProgressText", "0 Puzzles", 48f, FontStyles.Normal, Color.white, TextAlignmentOptions.MidlineLeft, font, false);
             var progressElement = progress.gameObject.AddComponent<LayoutElement>();
             progressElement.flexibleWidth = 1f;
-            progressElement.preferredHeight = 64f;
+            progressElement.preferredHeight = 72f;
             progressElement.flexibleHeight = 0f;
 
-            Image badge = CreateAccessBadge(info, font, sprite, out TMP_Text accessText);
+            Image badge = CreateAccessBadge(bottom, font, badgeOn != null ? badgeOn : sprite, out TMP_Text accessText);
 
             var card = root.AddComponent<CategoryCardUI>();
             var serialized = new SerializedObject(card);
@@ -579,24 +607,41 @@ namespace MindParadox.EditorTools
             serialized.FindProperty("accessText").objectReferenceValue = accessText;
             serialized.FindProperty("iconImage").objectReferenceValue = icon;
             serialized.FindProperty("accessBadge").objectReferenceValue = badge;
+            serialized.FindProperty("backgroundImage").objectReferenceValue = image;
+            serialized.FindProperty("arrowImage").objectReferenceValue = arrowImage;
+            serialized.FindProperty("activeBackground").objectReferenceValue = panelOn;
+            serialized.FindProperty("inactiveBackground").objectReferenceValue = panelOff;
+            serialized.FindProperty("activeBadgeSprite").objectReferenceValue = badgeOn;
+            serialized.FindProperty("inactiveBadgeSprite").objectReferenceValue = badgeOff;
             serialized.FindProperty("button").objectReferenceValue = button;
             serialized.ApplyModifiedPropertiesWithoutUndo();
             return root;
+        }
+
+        static void Place(RectTransform rect, Vector2 anchorMin, Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax)
+        {
+            rect.anchorMin = anchorMin;
+            rect.anchorMax = anchorMax;
+            rect.offsetMin = offsetMin;
+            rect.offsetMax = offsetMax;
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.localScale = Vector3.one;
         }
 
         static Image CreateIcon(Transform parent)
         {
             var iconObject = new GameObject("IconImage", typeof(RectTransform));
             iconObject.transform.SetParent(parent, false);
+            var iconRect = iconObject.GetComponent<RectTransform>();
+            iconRect.anchorMin = new Vector2(0.5f, 0.5f);
+            iconRect.anchorMax = new Vector2(0.5f, 0.5f);
+            iconRect.pivot = new Vector2(0.5f, 0.5f);
+            iconRect.sizeDelta = new Vector2(168f, 168f);
+            iconRect.anchoredPosition = Vector2.zero;
             var icon = iconObject.AddComponent<Image>();
-            icon.color = new Color32(0xD5, 0xDC, 0xE8, 0xFF);
+            icon.color = Color.white;
+            icon.preserveAspect = true;
             icon.raycastTarget = false;
-            var iconElement = iconObject.AddComponent<LayoutElement>();
-            iconElement.preferredWidth = 72f;
-            iconElement.preferredHeight = 72f;
-            iconElement.flexibleWidth = 0f;
-            iconElement.flexibleHeight = 0f;
-            iconObject.SetActive(false);
             return icon;
         }
 
@@ -604,22 +649,29 @@ namespace MindParadox.EditorTools
         {
             var badgeObject = new GameObject("AccessBadge", typeof(RectTransform));
             badgeObject.transform.SetParent(parent, false);
-            var badge = badgeObject.AddComponent<Image>();
-            badge.sprite = sprite;
-            badge.type = sprite != null ? Image.Type.Sliced : Image.Type.Simple;
-            badge.color = ButtonColor;
-            badge.raycastTarget = false;
             var badgeElement = badgeObject.AddComponent<LayoutElement>();
-            badgeElement.preferredWidth = 440f;
-            badgeElement.minWidth = 320f;
+            badgeElement.preferredWidth = 444f;
+            badgeElement.minWidth = 280f;
             badgeElement.preferredHeight = 72f;
             badgeElement.minHeight = 72f;
             badgeElement.flexibleWidth = 0f;
             badgeElement.flexibleHeight = 0f;
 
-            label = CreateText(badgeObject.transform, "Label", "FREE", 48f, FontStyles.Bold, Color.white, TextAlignmentOptions.Center, font, false);
-            label.margin = new Vector4(18f, 0f, 18f, 0f);
+            var backgroundObject = new GameObject("BadgeBackground", typeof(RectTransform));
+            backgroundObject.transform.SetParent(badgeObject.transform, false);
+            Stretch(backgroundObject.GetComponent<RectTransform>());
+            var badge = backgroundObject.AddComponent<Image>();
+            badge.sprite = sprite;
+            badge.type = sprite != null ? Image.Type.Sliced : Image.Type.Simple;
+            badge.color = Color.white;
+            badge.raycastTarget = false;
+
+            label = CreateText(badgeObject.transform, "BadgeLabel", "FREE", 48f, FontStyles.Bold, Color.white, TextAlignmentOptions.Center, font, false);
+            label.rectTransform.offsetMin = new Vector2(16f, 0f);
+            label.rectTransform.offsetMax = new Vector2(-16f, 0f);
             Stretch(label.rectTransform);
+            label.rectTransform.offsetMin = new Vector2(16f, 0f);
+            label.rectTransform.offsetMax = new Vector2(-16f, 0f);
             return badge;
         }
 

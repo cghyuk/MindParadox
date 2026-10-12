@@ -22,7 +22,7 @@ MonoBehaviour:
   puzzleType: 
   isDefaultFree: 0
   unlockOrder: 2
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 07db087ba7c0036478d6bca23fbe233b, type: 3}
   difficulty: 1
   isEnabled: 1
   titleKey: puzzle.bertrand-box.title

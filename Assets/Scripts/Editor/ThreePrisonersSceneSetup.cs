@@ -381,11 +381,7 @@ namespace MindParadox.EditorTools
                 return;
 
             const string glyphs = "세죄수문제명이있습니다정확히한명만사면되고나머지두명은처형됩니다에게묻습니다나말고중될사람이름을알려주세요가처형됩니다확률은정답오답다시하기회실험조건에맞는라운드사면간수는말할수없습니다되면반드시라고그래서입니다";
-            korean.TryAddCharacters(glyphs, out string missing);
-            if (!string.IsNullOrEmpty(missing))
-                Debug.LogWarning("[Mind Paradox] 세 죄수 문제 안내 중 폰트에 없는 문자: " + missing);
-
-            EditorUtility.SetDirty(korean);
+            PuzzleExplanationSetup.AddMissingGlyphs(korean, glyphs, "세 죄수 문제 안내 중 폰트에 없는 문자: ");
         }
 
         static void ValidateRules()

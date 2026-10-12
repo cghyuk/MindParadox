@@ -453,10 +453,54 @@ namespace MindParadox.EditorTools
                 return;
 
             const string glyphs = "설명왜문을바꾸는것이유리할까처음선택한자동차가있을확률은개가라면이다틀렸을진행자는위치를알고있고반드시염소있는만연다따라서였던경우남은으로바꾸면얻게된다개의사람만있어도넘을생일만보면드문일처럼보입니다실제로는모든쌍을서로비교합니다명에게서만들어지는수는늘어날수록비교되는매우빠르게증가따라서최소두같을약은모든생일이다를먼저계산하고그값을에서뺍니다닫기아직연결되지않았습니다금화나온뒤세가지중두가지는동전도";
-            korean.TryAddCharacters(glyphs, out string missing);
-            if (!string.IsNullOrEmpty(missing))
-                Debug.LogWarning("[Mind Paradox] 설명 문장 중 폰트에 없는 문자: " + missing);
+            const string displayGlyphs = "각간강거건검공구꿀누뉴능닐닙대더데독됩뒷득때떻또뜻른름릴립말머메목몬못무묶므배번베별병볼봉봐분빨빼상성속순쉽스씩안앞액야양없여역엽영올와왔외요운율인작재적절접정졌조준질째쪽찰찾첫체총츠카콘크터테텐통투티패편포필학항해했향험현형홀환회히본용많변초달프팹열었부플레래원높";
+            AddMissingGlyphs(korean, glyphs + displayGlyphs, "설명 문장 중 폰트에 없는 문자: ");
+            KoreanGlyphChecker.AddMissing();
+            KeepBakedKoreanGlyphs(korean);
+        }
 
+        internal static void AddMissingGlyphs(TMP_FontAsset font, string characters, string warningPrefix)
+        {
+            string pending = GlyphsMissingFrom(font, characters);
+            if (pending.Length == 0)
+                return;
+
+            font.TryAddCharacters(pending, out string missing);
+            string stillMissing = GlyphsMissingFrom(font, missing);
+            if (stillMissing.Length > 0)
+                Debug.LogWarning("[Mind Paradox] " + warningPrefix + stillMissing);
+
+            EditorUtility.SetDirty(font);
+        }
+
+        internal static string GlyphsMissingFrom(TMP_FontAsset font, string characters)
+        {
+            if (font == null || string.IsNullOrEmpty(characters))
+                return string.Empty;
+
+            var pending = new System.Text.StringBuilder();
+            var seen = new System.Collections.Generic.HashSet<char>();
+            for (int i = 0; i < characters.Length; i++)
+            {
+                char character = characters[i];
+                if (!seen.Add(character))
+                    continue;
+                if (!font.HasCharacter(character, false, false))
+                    pending.Append(character);
+            }
+
+            return pending.ToString();
+        }
+
+        static void KeepBakedKoreanGlyphs(TMP_FontAsset korean)
+        {
+            var serialized = new SerializedObject(korean);
+            SerializedProperty clearOnBuild = serialized.FindProperty("m_ClearDynamicDataOnBuild");
+            if (clearOnBuild == null || !clearOnBuild.boolValue)
+                return;
+
+            clearOnBuild.boolValue = false;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(korean);
         }
 

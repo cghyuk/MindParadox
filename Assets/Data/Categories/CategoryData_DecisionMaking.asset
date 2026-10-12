@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.CategoryData
   categoryId: decision
   displayName: "\uC758\uC0AC\uACB0\uC815"
-  description: "선택이 결과를 어떻게 바꾸는지 보는 문제"
+  description: "\uC120\uD0DD\uC774 \uACB0\uACFC\uB97C \uC5B4\uB5BB\uAC8C \uBC14\uAFB8\uB294\uC9C0
+    \uBCF4\uB294 \uBB38\uC81C"
   displayOrder: 5
   puzzleCapacity: 100
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 85c02c33ccbf4174dbc4cc652bc65400, type: 3}
   unlockProductId: decision_pack
   isEnabled: 0
   displayNameKey: 

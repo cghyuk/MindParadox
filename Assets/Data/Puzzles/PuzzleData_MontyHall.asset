@@ -22,7 +22,7 @@ MonoBehaviour:
   puzzleType: 
   isDefaultFree: 1
   unlockOrder: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 8789fc1fee65b574ebb37531ea273c1d, type: 3}
   difficulty: 1
   isEnabled: 1
   titleKey: 

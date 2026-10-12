@@ -14,14 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MindParadox.Data.PuzzleData
   puzzleId: boy-girl-paradox
   categoryId: probability
-  title: "\uC18C\uB144\u00B7\uC18C\uB140 \uC5ED\uC124"
-  shortDescription: "\uC801\uC5B4\uB3C4 \uD55C \uBA85\uC774 \uB0A8\uC790\uC544\uC774\uB77C\uBA74, \uB458 \uB2E4 \uB0A8\uC790\uC77C \uD655\uB960\uC740?"
+  title: "\uC18C\uB144\xB7\uC18C\uB140 \uC5ED\uC124"
+  shortDescription: "\uC801\uC5B4\uB3C4 \uD55C \uBA85\uC774 \uB0A8\uC790\uC544\uC774\uB77C\uBA74,
+    \uB458 \uB2E4 \uB0A8\uC790\uC77C \uD655\uB960\uC740?"
   displayOrder: 5
   sceneName: BoyGirlParadoxScene
   puzzleType: 
   isDefaultFree: 0
   unlockOrder: 5
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 457f02bb4cffb874f9d3bff04687f9b5, type: 3}
   difficulty: 1
   isEnabled: 1
   titleKey: puzzle.boy-girl-paradox.title
