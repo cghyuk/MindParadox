@@ -218,7 +218,7 @@ namespace MindParadox.EditorTools
             RectTransform safeArea = CreateStretch("SafeArea", canvasObject.transform);
             safeArea.gameObject.AddComponent<SafeAreaFitter>();
             var safeLayout = safeArea.gameObject.AddComponent<VerticalLayoutGroup>();
-            safeLayout.padding = new RectOffset(48, 48, 0, 36);
+            safeLayout.padding = new RectOffset(0, 0, 0, 24);
             safeLayout.spacing = 20f;
             safeLayout.childAlignment = TextAnchor.UpperCenter;
             safeLayout.childControlWidth = true;
@@ -228,10 +228,11 @@ namespace MindParadox.EditorTools
 
             RectTransform header = CreateUiObject("Header", safeArea);
             var headerElement = header.gameObject.AddComponent<LayoutElement>();
-            headerElement.preferredHeight = 510f;
+            headerElement.preferredHeight = 96f;
+            headerElement.minHeight = 96f;
             headerElement.flexibleHeight = 0f;
             var headerLayout = header.gameObject.AddComponent<VerticalLayoutGroup>();
-            headerLayout.padding = new RectOffset(8, 8, 48, 8);
+            headerLayout.padding = new RectOffset(72, 72, 0, 0);
             headerLayout.spacing = 14f;
             headerLayout.childAlignment = TextAnchor.UpperCenter;
             headerLayout.childControlWidth = true;
@@ -269,20 +270,58 @@ namespace MindParadox.EditorTools
             modeElement.flexibleWidth = 0f;
             mode.interactable = false;
 
-            TMP_Text title = CreateText(header, "TitleText", "몬티홀 문제", 70f, FontStyles.Bold, TitleColor, TextAlignmentOptions.Center, font, false);
+            RectTransform body = CreateUiObject("BodyScrollView", safeArea);
+            var bodyElement = body.gameObject.AddComponent<LayoutElement>();
+            bodyElement.flexibleHeight = 1f;
+            bodyElement.flexibleWidth = 1f;
+            bodyElement.minHeight = 0f;
+            var bodyScroll = body.gameObject.AddComponent<ScrollRect>();
+            bodyScroll.horizontal = false;
+            bodyScroll.vertical = true;
+            bodyScroll.movementType = ScrollRect.MovementType.Elastic;
+            bodyScroll.scrollSensitivity = 40f;
+
+            RectTransform bodyViewport = CreateStretch("Viewport", body);
+            bodyViewport.gameObject.AddComponent<RectMask2D>();
+            var bodyViewportImage = bodyViewport.gameObject.AddComponent<Image>();
+            bodyViewportImage.color = new Color(1f, 1f, 1f, 0.01f);
+            bodyScroll.viewport = bodyViewport;
+
+            RectTransform bodyContent = CreateUiObject("Content", bodyViewport);
+            bodyContent.anchorMin = new Vector2(0f, 1f);
+            bodyContent.anchorMax = new Vector2(1f, 1f);
+            bodyContent.pivot = new Vector2(0.5f, 1f);
+            bodyContent.offsetMin = Vector2.zero;
+            bodyContent.offsetMax = Vector2.zero;
+            var bodyLayout = bodyContent.gameObject.AddComponent<VerticalLayoutGroup>();
+            bodyLayout.padding = new RectOffset(72, 72, 24, 36);
+            bodyLayout.spacing = 16f;
+            bodyLayout.childAlignment = TextAnchor.UpperCenter;
+            bodyLayout.childControlWidth = true;
+            bodyLayout.childControlHeight = true;
+            bodyLayout.childForceExpandWidth = true;
+            bodyLayout.childForceExpandHeight = false;
+            var bodyFitter = bodyContent.gameObject.AddComponent<ContentSizeFitter>();
+            bodyFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            bodyFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            bodyScroll.content = bodyContent;
+
+            TMP_Text title = CreateText(bodyContent, "TitleText", "몬티홀 문제", 70f, FontStyles.Bold, TitleColor, TextAlignmentOptions.Center, font, false);
             var titleElement = title.gameObject.AddComponent<LayoutElement>();
             titleElement.preferredHeight = 100f;
             titleElement.flexibleHeight = 0f;
 
-            TMP_Text description = CreateText(header, "DescriptionText", "문이 많아질수록\n바꾸기의 확률은 어떻게 달라질까요?", 60f, FontStyles.Normal, new Color32(0xA8, 0xB3, 0xC7, 0xFF), TextAlignmentOptions.Center, font, true);
+            TMP_Text description = CreateText(bodyContent, "DescriptionText", "문이 많아질수록\n바꾸기의 확률은 어떻게 달라질까요?", 60f, FontStyles.Normal, new Color32(0xA8, 0xB3, 0xC7, 0xFF), TextAlignmentOptions.Center, font, true);
             var descriptionElement = description.gameObject.AddComponent<LayoutElement>();
             descriptionElement.preferredHeight = 220f;
             descriptionElement.flexibleHeight = 0f;
 
-            RectTransform modePanel = CreateUiObject("ModePanel", safeArea);
+            CreateHeroImage(bodyContent);
+
+            RectTransform modePanel = CreateUiObject("ModePanel", bodyContent);
             var modePanelElement = modePanel.gameObject.AddComponent<LayoutElement>();
-            modePanelElement.flexibleHeight = 1f;
-            modePanelElement.minHeight = 640f;
+            modePanelElement.flexibleHeight = 0f;
+            modePanelElement.minHeight = 0f;
             var modeLayout = modePanel.gameObject.AddComponent<VerticalLayoutGroup>();
             modeLayout.spacing = 22f;
             modeLayout.padding = new RectOffset(8, 8, 8, 8);
@@ -664,6 +703,22 @@ namespace MindParadox.EditorTools
             AssetDatabase.ImportAsset(DoorPrefabPath);
             var saved = AssetDatabase.LoadAssetAtPath<GameObject>(DoorPrefabPath);
             return saved != null ? saved.GetComponent<MontyHallDoorUI>() : null;
+        }
+
+        static void CreateHeroImage(Transform parent)
+        {
+            var heroObject = new GameObject("HeroImage", typeof(RectTransform));
+            heroObject.transform.SetParent(parent, false);
+            var image = heroObject.AddComponent<Image>();
+            Sprite hero = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/_MindParadox/UIs/icon_Probability_MontyHall.png");
+            image.sprite = hero;
+            image.preserveAspect = true;
+            image.raycastTarget = false;
+            var element = heroObject.AddComponent<LayoutElement>();
+            element.preferredHeight = 320f;
+            element.minHeight = 240f;
+            element.flexibleWidth = 1f;
+            element.flexibleHeight = 0f;
         }
 
         static void CreateHint(Transform parent, string text, TMP_FontAsset font)

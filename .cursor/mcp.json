@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "unity-mindparadox": {
+      "command": "C:\\Users\\chiph\\AppData\\Local\\Unity\\bin\\unity.exe",
+      "args": ["mcp", "--project-path", "${workspaceFolder}"]
+    }
+  }
+}

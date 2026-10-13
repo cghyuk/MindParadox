@@ -180,7 +180,14 @@ namespace MindParadox.Games.MontyHall
         void SetPlayChrome(bool playing)
         {
             if (modePanel != null)
+            {
                 modePanel.SetActive(!playing);
+                Transform scroll = modePanel.transform;
+                while (scroll != null && scroll.name != "BodyScrollView")
+                    scroll = scroll.parent;
+                if (scroll != null)
+                    scroll.gameObject.SetActive(!playing);
+            }
 
             if (gameArea != null)
                 gameArea.SetActive(playing);
@@ -730,6 +737,7 @@ namespace MindParadox.Games.MontyHall
             string[] names =
             {
                 "Header",
+                "BodyScrollView",
                 "ModePanel",
                 "DoorArea",
                 "ProbabilityArea",

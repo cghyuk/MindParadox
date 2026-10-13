@@ -27,7 +27,15 @@ namespace MindParadox.UI
 
             var rowLayout = topRow.GetComponent<HorizontalLayoutGroup>();
             if (rowLayout != null)
+            {
+                rowLayout.enabled = true;
                 rowLayout.spacing = Spacing;
+                rowLayout.childAlignment = TextAnchor.MiddleLeft;
+                rowLayout.childControlWidth = true;
+                rowLayout.childControlHeight = true;
+                rowLayout.childForceExpandWidth = false;
+                rowLayout.childForceExpandHeight = false;
+            }
 
             var rowElement = topRow.GetComponent<LayoutElement>();
             if (rowElement != null)
@@ -38,8 +46,18 @@ namespace MindParadox.UI
             }
 
             LayoutElement headerElement = topRow.parent != null ? topRow.parent.GetComponent<LayoutElement>() : null;
-            if (headerElement != null && headerElement.preferredHeight > 0f && headerElement.preferredHeight < ButtonHeight + 76f)
-                headerElement.preferredHeight = ButtonHeight + 80f;
+            if (headerElement != null)
+            {
+                bool titleInsideHeader = topRow.parent.Find("TitleText") != null;
+                if (!titleInsideHeader)
+                {
+                    headerElement.preferredHeight = ButtonHeight;
+                    headerElement.minHeight = ButtonHeight;
+                    headerElement.flexibleHeight = 0f;
+                }
+                else if (headerElement.preferredHeight > 0f && headerElement.preferredHeight < ButtonHeight + 76f)
+                    headerElement.preferredHeight = ButtonHeight + 80f;
+            }
 
             Transform back = topRow.Find("BackButton");
             Transform explanation = topRow.Find("ExplanationButton");
@@ -53,6 +71,8 @@ namespace MindParadox.UI
 
             Transform mode = topRow.Find("ModeButton");
             Transform spacer = topRow.Find("HeaderSpacer");
+            if (spacer == null)
+                spacer = topRow.Find("Spacer");
             if (mode != null && spacer == null)
             {
                 var spacerObject = new GameObject("HeaderSpacer", typeof(RectTransform));
@@ -82,6 +102,7 @@ namespace MindParadox.UI
             if (element == null)
                 element = buttonTransform.gameObject.AddComponent<LayoutElement>();
 
+            element.enabled = true;
             element.preferredWidth = ButtonWidth;
             element.minWidth = ButtonWidth;
             element.preferredHeight = ButtonHeight;
@@ -113,6 +134,7 @@ namespace MindParadox.UI
             if (element == null)
                 element = buttonTransform.gameObject.AddComponent<LayoutElement>();
 
+            element.enabled = true;
             element.preferredHeight = ButtonHeight;
             element.minHeight = ButtonHeight;
             element.flexibleHeight = 0f;
